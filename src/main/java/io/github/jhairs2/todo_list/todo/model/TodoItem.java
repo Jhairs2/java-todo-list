@@ -34,6 +34,15 @@ public class TodoItem {
         return completed;
     }
 
+    public void toggleCompleted() {
+        if (this.completed) {
+            this.completed = false;
+
+        } else {
+            this.completed = true;
+        }
+    }
+
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
