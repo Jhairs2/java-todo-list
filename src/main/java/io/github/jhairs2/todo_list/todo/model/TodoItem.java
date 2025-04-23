@@ -22,6 +22,10 @@ public class TodoItem {
     public TodoItem() {
     }
 
+    public TodoItem(String task) {
+        this.task = task;
+    }
+
     public TodoItem(Long id, String task) {
         this.id = id;
         this.task = task;
