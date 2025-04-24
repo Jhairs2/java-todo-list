@@ -23,4 +23,14 @@ public class TodoService {
 
     }
 
+    public TodoItem addTodoToList(TodoItem task) {
+
+        if (task == null || task.getTask().length() == 0) {
+            throw new IllegalArgumentException("Task cannot be blank or null");
+        }
+
+        return this.todoRepository.save(task);
+
+    }
+
 }
