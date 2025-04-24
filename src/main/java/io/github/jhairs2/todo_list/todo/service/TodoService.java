@@ -33,7 +33,7 @@ public class TodoService {
 
     }
 
-    public TodoItem updateTodo(Long id, TodoItem updatedTask) {
+    public TodoItem updateTodoById(Long id, TodoItem updatedTask) {
         TodoItem oldTask = this.todoRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("This id does not exist."));
 
