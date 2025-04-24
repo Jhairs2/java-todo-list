@@ -8,22 +8,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
-import io.github.jhairs2.todo_list.todo.repository.TodoRepository;
+
+import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @RestController
 @RequestMapping(path = "/api/v1/todos")
 public class TodoListController {
 
-    private final TodoRepository todoRepository;
+    private final TodoService todoService;
 
     @Autowired
-    public TodoListController(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
+    public TodoListController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
     @GetMapping
     public List<TodoItem> getAllTodoList() {
-        return this.todoRepository.findAll();
+        return this.todoService.getAllTodoList();
 
     }
 
