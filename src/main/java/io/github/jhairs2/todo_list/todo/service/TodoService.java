@@ -33,4 +33,15 @@ public class TodoService {
 
     }
 
+    public TodoItem updateTodo(Long id, TodoItem updatedTask) {
+        TodoItem oldTask = this.todoRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("This id does not exist."));
+
+        oldTask.setTask(updatedTask.getTask());
+        oldTask.setCompleted(updatedTask.isCompleted());
+
+        return this.todoRepository.save(oldTask);
+
+    }
+
 }
