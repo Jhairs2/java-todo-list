@@ -36,7 +36,7 @@ public class TodoService {
 
     public TodoItem updateTodoById(Long id, TodoItem updatedTask) {
         TodoItem oldTask = this.todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("This id does not exist."));
+                .orElseThrow(() -> new EntityNotFoundException("This id does not exist."));
 
         oldTask.setTask(updatedTask.getTask());
         oldTask.setCompleted(updatedTask.isCompleted());
