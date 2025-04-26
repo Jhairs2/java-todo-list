@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.repository.TodoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class TodoService {
@@ -34,6 +35,7 @@ public class TodoService {
 
     }
 
+    @Transactional
     public TodoItem updateTodoById(Long id, TodoItem updatedTask) {
         TodoItem oldTask = this.todoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("This id does not exist."));
