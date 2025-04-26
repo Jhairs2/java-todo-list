@@ -3,7 +3,10 @@ package io.github.jhairs2.todo_list.todo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.repository.TodoRepository;
@@ -38,7 +41,7 @@ public class TodoService {
     @Transactional
     public TodoItem updateTodoById(Long id, TodoItem updatedTask) {
         TodoItem oldTask = this.todoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("This id does not exist."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         oldTask.setTask(updatedTask.getTask());
         oldTask.setCompleted(updatedTask.isCompleted());
@@ -49,7 +52,7 @@ public class TodoService {
 
     public TodoItem deleteTodoFromList(Long id) {
         TodoItem deletedTask = this.todoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Id can not be found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         this.todoRepository.delete(deletedTask);
 
