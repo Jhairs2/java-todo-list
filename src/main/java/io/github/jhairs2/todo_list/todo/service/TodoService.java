@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.repository.TodoRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class TodoService {
@@ -42,6 +43,15 @@ public class TodoService {
 
         return this.todoRepository.save(oldTask);
 
+    }
+
+    public TodoItem deleteTodoFromList(Long id) {
+        TodoItem deletedTask = this.todoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Id can not be found"));
+
+        this.todoRepository.delete(deletedTask);
+
+        return deletedTask;
     }
 
 }
