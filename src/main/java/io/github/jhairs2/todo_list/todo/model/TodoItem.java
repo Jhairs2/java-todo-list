@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -12,12 +14,15 @@ import jakarta.persistence.Table;
 public class TodoItem {
     @Id
     @SequenceGenerator(name = "task_sequence", sequenceName = "task_sequence", allocationSize = 1)
-
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_sequence")
-
     private Long id;
+
     private String task;
     private boolean completed;
+
+    @ManyToOne
+    @JoinColumn(name = "list_id")
+    private ProjectList list;
 
     public TodoItem() {
     }
@@ -51,17 +56,12 @@ public class TodoItem {
         return completed;
     }
 
-    public void toggleCompleted() {
-        if (this.completed) {
-            this.completed = false;
-
-        } else {
-            this.completed = true;
-        }
-    }
-
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public ProjectList getList() {
+        return list;
     }
 
 }
