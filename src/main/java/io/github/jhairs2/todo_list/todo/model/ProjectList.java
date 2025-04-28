@@ -31,6 +31,11 @@ public class ProjectList {
         this.listTitle = listTitle;
     }
 
+    public TodoItem addTaskToList(TodoItem todoItem) {
+        this.tasks.add(todoItem);
+        return todoItem;
+    }
+
     public Long getId() {
         return id;
     }
