@@ -5,22 +5,25 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.github.jhairs2.todo_list.todo.model.ProjectList;
+import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
+import io.github.jhairs2.todo_list.todo.mapper.ProjectListDTOMapper;
 import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
 
 @Service
 public class ProjectListService {
 
     private final ProjectListRepository projectListRepository;
+    private final ProjectListDTOMapper projectListDTOMapper;
 
     @Autowired
-    public ProjectListService(ProjectListRepository projectListRepository) {
+    public ProjectListService(ProjectListRepository projectListRepository, ProjectListDTOMapper projectListDTOMapper) {
         this.projectListRepository = projectListRepository;
+        this.projectListDTOMapper = projectListDTOMapper;
     }
 
-    public List<ProjectList> getAllProjectLists() {
+    public List<ProjectListDTO> getAllProjectLists() {
 
-        return this.projectListRepository.findAll();
+        return this.projectListDTOMapper.convertProjectsToDTOList(this.projectListRepository.findAll());
 
     }
 
