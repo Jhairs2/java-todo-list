@@ -31,11 +31,6 @@ public class ProjectList {
         this.listTitle = listTitle;
     }
 
-    public TodoItem addTaskToList(TodoItem todoItem) {
-        this.tasks.add(todoItem);
-        return todoItem;
-    }
-
     public Long getId() {
         return id;
     }
@@ -54,6 +49,11 @@ public class ProjectList {
 
     public List<TodoItem> getTasks() {
         return tasks;
+    }
+
+    public TodoItem addTaskToList(TodoItem todoItem) {
+        this.tasks.add(todoItem);
+        return todoItem;
     }
 
 }
