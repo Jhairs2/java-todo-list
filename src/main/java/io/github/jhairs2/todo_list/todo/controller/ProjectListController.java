@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import io.github.jhairs2.todo_list.todo.model.ProjectList;
+
+import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
 import io.github.jhairs2.todo_list.todo.service.ProjectListService;
 
 @RestController
@@ -21,7 +22,7 @@ public class ProjectListController {
     }
 
     @GetMapping
-    public List<ProjectList> getAllProjectLists() {
+    public List<ProjectListDTO> getAllProjectLists() {
         return this.projectListService.getAllProjectLists();
     }
 }
