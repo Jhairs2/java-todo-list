@@ -51,9 +51,4 @@ public class ProjectList {
         return tasks;
     }
 
-    public TodoItem addTaskToList(TodoItem todoItem) {
-        this.tasks.add(todoItem);
-        return todoItem;
-    }
-
 }
