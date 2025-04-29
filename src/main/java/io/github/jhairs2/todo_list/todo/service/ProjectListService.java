@@ -27,4 +27,10 @@ public class ProjectListService {
 
     }
 
+    public ProjectListDTO getProjectList(Long id) {
+        return this.projectListDTOMapper.convertProjectToDTO(
+                this.projectListRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Project with that id does not exist")));
+    }
+
 }
