@@ -32,7 +32,7 @@ public class ProjectList {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -40,7 +40,7 @@ public class ProjectList {
     }
 
     public String getListTitle() {
-        return listTitle;
+        return this.listTitle;
     }
 
     public void setListTitle(String listTitle) {
@@ -48,7 +48,7 @@ public class ProjectList {
     }
 
     public List<TodoItem> getTasks() {
-        return tasks;
+        return this.tasks;
     }
 
 }
