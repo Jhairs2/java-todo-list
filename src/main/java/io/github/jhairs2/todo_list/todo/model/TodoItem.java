@@ -10,7 +10,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Tasks")
+@Table(name = "tasks")
 public class TodoItem {
     @Id
     @SequenceGenerator(name = "task_sequence", sequenceName = "task_sequence", allocationSize = 1)
@@ -37,7 +37,7 @@ public class TodoItem {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -53,7 +53,7 @@ public class TodoItem {
     }
 
     public boolean isCompleted() {
-        return completed;
+        return this.completed;
     }
 
     public void setCompleted(boolean completed) {
@@ -61,7 +61,11 @@ public class TodoItem {
     }
 
     public ProjectList getList() {
-        return list;
+        return this.list;
+    }
+
+    public void setList(ProjectList list) {
+        this.list = list;
     }
 
 }

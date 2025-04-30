@@ -1,5 +1,6 @@
 package io.github.jhairs2.todo_list.todo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -22,13 +23,14 @@ public class ProjectList {
     private String listTitle;
 
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
-    private List<TodoItem> tasks;
+    private List<TodoItem> tasks = new ArrayList<>();
 
     public ProjectList() {
     }
 
     public ProjectList(String listTitle) {
         this.listTitle = listTitle;
+
     }
 
     public Long getId() {
