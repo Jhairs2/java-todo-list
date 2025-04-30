@@ -14,7 +14,7 @@ import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @RestController
-@RequestMapping(path = "/api/v1/todos")
+@RequestMapping(path = "/api/v1/{projectId}/todos")
 public class TodoListController {
 
     private final TodoService todoService;
@@ -25,8 +25,8 @@ public class TodoListController {
     }
 
     @GetMapping
-    public List<TodoItem> getAllTodoList() {
-        return this.todoService.getAllTodoList();
+    public List<TodoItem> getAllTodosFromList(@PathVariable("projectId") Long id) {
+        return this.todoService.getAllTodoList(id);
 
     }
 
