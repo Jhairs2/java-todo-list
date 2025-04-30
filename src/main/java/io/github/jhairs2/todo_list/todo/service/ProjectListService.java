@@ -34,6 +34,15 @@ public class ProjectListService {
                         .orElseThrow(() -> new IllegalArgumentException("Project with that id can not be found.")));
     }
 
+    public ProjectListDTO updateProjectList(Long id, ProjectList projectList) {
+        ProjectList newProject = this.projectListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Project with that id can not be found."));
+
+        newProject.setListTitle(projectList.getListTitle());
+
+        return this.projectListDTOMapper.convertProjectToDTO(this.projectListRepository.save(newProject));
+    }
+
     public ProjectListDTO deleteProjectList(Long id) {
         ProjectList deletedProject = this.projectListRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Project with that id can not be found."));
