@@ -31,8 +31,8 @@ public class TodoListController {
     }
 
     @PostMapping
-    public TodoItem addTodoToList(@RequestBody TodoItem task) {
-        return this.todoService.addTodoToList(task);
+    public TodoItem addTodoToList(@PathVariable("projectId") Long id, @RequestBody TodoItem task) {
+        return this.todoService.addTodoToList(id, task);
     }
 
     @PutMapping(path = "/{taskId}")
