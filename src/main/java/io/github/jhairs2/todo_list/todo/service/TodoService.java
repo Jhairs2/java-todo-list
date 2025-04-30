@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
+import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
 import io.github.jhairs2.todo_list.todo.repository.TodoRepository;
 import jakarta.transaction.Transactional;
 
@@ -14,14 +17,19 @@ import jakarta.transaction.Transactional;
 public class TodoService {
 
     private final TodoRepository todoRepository;
+    private final ProjectListRepository projectListRepository;
 
     @Autowired
-    public TodoService(TodoRepository todoRepository) {
+    public TodoService(TodoRepository todoRepository, ProjectListRepository projectListRepository) {
         this.todoRepository = todoRepository;
+        this.projectListRepository = projectListRepository;
     }
 
-    public List<TodoItem> getAllTodoList() {
-        return this.todoRepository.findAll();
+    public List<TodoItem> getAllTodosFromList(Long id) {
+        ProjectList project = this.projectListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("There is no project with this id"));
+
+        return project.getTasks();
 
     }
 
