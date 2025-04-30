@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
 import io.github.jhairs2.todo_list.todo.mapper.ProjectListDTOMapper;
+import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
 
 @Service
@@ -30,7 +31,16 @@ public class ProjectListService {
     public ProjectListDTO getProjectList(Long id) {
         return this.projectListDTOMapper.convertProjectToDTO(
                 this.projectListRepository.findById(id)
-                        .orElseThrow(() -> new IllegalArgumentException("Project with that id does not exist")));
+                        .orElseThrow(() -> new IllegalArgumentException("Project with that id can not be found.")));
+    }
+
+    public ProjectListDTO deleteProjectList(Long id) {
+        ProjectList deletedProject = this.projectListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Project with that id can not be found."));
+
+        this.projectListRepository.delete(deletedProject);
+
+        return this.projectListDTOMapper.convertProjectToDTO(deletedProject);
     }
 
 }
