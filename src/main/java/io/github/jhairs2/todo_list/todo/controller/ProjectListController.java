@@ -39,7 +39,7 @@ public class ProjectListController {
     @PutMapping(path = "/{projectListId}")
     public ProjectListDTO updateProjectList(@PathVariable("projectListId") Long id,
             @RequestBody ProjectList projectList) {
-        return this.updateProjectList(id, projectList);
+        return this.projectListService.updateProjectList(id, projectList);
     }
 
     @DeleteMapping(path = "/{projectListId}")
