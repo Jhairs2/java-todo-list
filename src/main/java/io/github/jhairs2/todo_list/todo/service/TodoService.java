@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
+import io.github.jhairs2.todo_list.todo.mapper.TodoItemDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
@@ -17,23 +19,26 @@ import jakarta.transaction.Transactional;
 public class TodoService {
 
     private final TodoRepository todoRepository;
+    private final TodoItemDTOMapper todoItemDTOMapper;
     private final ProjectListRepository projectListRepository;
 
     @Autowired
-    public TodoService(TodoRepository todoRepository, ProjectListRepository projectListRepository) {
+    public TodoService(TodoRepository todoRepository, TodoItemDTOMapper todoItemDTOMapper,
+            ProjectListRepository projectListRepository) {
         this.todoRepository = todoRepository;
+        this.todoItemDTOMapper = todoItemDTOMapper;
         this.projectListRepository = projectListRepository;
     }
 
-    public List<TodoItem> getAllTodosFromList(Long id) {
+    public List<TodoItemDTO> getAllTodosFromList(Long id) {
         ProjectList project = this.projectListRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("There is no project with this id"));
 
-        return project.getTasks();
+        return this.todoItemDTOMapper.convertTodoItemsToDTOList(project.getTasks());
 
     }
 
-    public TodoItem addTodoToList(Long id, TodoItem task) {
+    public TodoItemDTO addTodoToList(Long id, TodoItem task) {
 
         if (task == null || task.getTask().length() == 0) {
             throw new IllegalArgumentException("Task cannot be blank or null");
@@ -45,29 +50,29 @@ public class TodoService {
         task.setList(project);
         project.getTasks().add(task);
 
-        return this.todoRepository.save(task);
+        return this.todoItemDTOMapper.convertTodoItemToDTO(this.todoRepository.save(task));
 
     }
 
     @Transactional
-    public TodoItem updateTodoById(Long id, TodoItem updatedTask) {
+    public TodoItemDTO updateTodoById(Long id, TodoItem updatedTask) {
         TodoItem oldTask = this.todoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         oldTask.setTask(updatedTask.getTask());
         oldTask.setCompleted(updatedTask.isCompleted());
 
-        return this.todoRepository.save(oldTask);
+        return this.todoItemDTOMapper.convertTodoItemToDTO(this.todoRepository.save(oldTask));
 
     }
 
-    public TodoItem deleteTodoFromList(Long id) {
+    public TodoItemDTO deleteTodoFromList(Long id) {
         TodoItem deletedTask = this.todoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         this.todoRepository.delete(deletedTask);
 
-        return deletedTask;
+        return this.todoItemDTOMapper.convertTodoItemToDTO(deletedTask);
     }
 
 }

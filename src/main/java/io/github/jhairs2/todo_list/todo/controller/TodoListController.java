@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.service.TodoService;
 
@@ -25,23 +27,23 @@ public class TodoListController {
     }
 
     @GetMapping
-    public List<TodoItem> getAllTodosFromList(@PathVariable("projectId") Long id) {
+    public List<TodoItemDTO> getAllTodosFromList(@PathVariable("projectId") Long id) {
         return this.todoService.getAllTodosFromList(id);
 
     }
 
     @PostMapping
-    public TodoItem addTodoToList(@PathVariable("projectId") Long id, @RequestBody TodoItem task) {
+    public TodoItemDTO addTodoToList(@PathVariable("projectId") Long id, @RequestBody TodoItem task) {
         return this.todoService.addTodoToList(id, task);
     }
 
     @PutMapping(path = "/{taskId}")
-    public TodoItem updateTodoById(@PathVariable("taskId") Long id, @RequestBody TodoItem task) {
+    public TodoItemDTO updateTodoById(@PathVariable("taskId") Long id, @RequestBody TodoItem task) {
         return this.todoService.updateTodoById(id, task);
     }
 
     @DeleteMapping(path = "/{taskId}")
-    public TodoItem deleteTodoFromList(@PathVariable("taskId") Long id) {
+    public TodoItemDTO deleteTodoFromList(@PathVariable("taskId") Long id) {
         return this.todoService.deleteTodoFromList(id);
     }
 
