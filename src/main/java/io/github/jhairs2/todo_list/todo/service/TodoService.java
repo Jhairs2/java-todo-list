@@ -33,11 +33,17 @@ public class TodoService {
 
     }
 
-    public TodoItem addTodoToList(TodoItem task) {
+    public TodoItem addTodoToList(Long id, TodoItem task) {
 
         if (task == null || task.getTask().length() == 0) {
             throw new IllegalArgumentException("Task cannot be blank or null");
         }
+
+        ProjectList project = this.projectListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("There is no project with this id"));
+
+        task.setList(project);
+        project.getTasks().add(task);
 
         return this.todoRepository.save(task);
 
