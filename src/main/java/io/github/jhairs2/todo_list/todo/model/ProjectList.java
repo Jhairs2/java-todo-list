@@ -22,7 +22,7 @@ public class ProjectList {
     private Long id;
     private String listTitle;
 
-    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoItem> tasks = new ArrayList<>();
 
     public ProjectList() {
