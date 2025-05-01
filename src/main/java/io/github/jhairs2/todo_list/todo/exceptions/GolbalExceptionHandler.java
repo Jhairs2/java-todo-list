@@ -1,5 +1,7 @@
 package io.github.jhairs2.todo_list.todo.exceptions;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,8 +15,8 @@ public class GolbalExceptionHandler {
             ProjectListNotFoundException projectListNotFoundException) {
         ErrorResponse errorResponse = new ErrorResponse(
                 projectListNotFoundException.getMessage(),
-                projectListNotFoundException.getCause(),
-                HttpStatus.NOT_FOUND);
+                HttpStatus.NOT_FOUND,
+                LocalDateTime.now());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
