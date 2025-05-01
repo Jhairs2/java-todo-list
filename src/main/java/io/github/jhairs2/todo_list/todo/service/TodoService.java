@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
+import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
+import io.github.jhairs2.todo_list.todo.exceptions.TodoItemNotFoundException;
 import io.github.jhairs2.todo_list.todo.mapper.TodoItemDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
@@ -32,7 +34,7 @@ public class TodoService {
 
     public List<TodoItemDTO> getAllTodosFromList(Long id) {
         ProjectList project = this.projectListRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no project with this id"));
+                .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found."));
 
         return this.todoItemDTOMapper.convertTodoItemsToDTOList(project.getTasks());
 
@@ -45,8 +47,7 @@ public class TodoService {
         }
 
         ProjectList project = this.projectListRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no project with this id"));
-
+                .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found."));
         task.setList(project);
         project.getTasks().add(task);
 
@@ -57,7 +58,7 @@ public class TodoService {
     @Transactional
     public TodoItemDTO updateTodoById(Long id, TodoItem updatedTask) {
         TodoItem oldTask = this.todoRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new TodoItemNotFoundException("Task with that id does not exist."));
 
         oldTask.setTask(updatedTask.getTask());
         oldTask.setCompleted(updatedTask.isCompleted());
@@ -68,7 +69,7 @@ public class TodoService {
 
     public TodoItemDTO deleteTodoFromList(Long id) {
         TodoItem deletedTask = this.todoRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new TodoItemNotFoundException("Task with that id does not exist."));
 
         this.todoRepository.delete(deletedTask);
 
