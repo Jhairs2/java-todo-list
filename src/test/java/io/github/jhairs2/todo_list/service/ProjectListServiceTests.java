@@ -29,7 +29,6 @@ public class ProjectListServiceTests {
     @Mock
     private ProjectListDTOMapper projectListDTOMapper;
 
-    @Mock
     private ProjectList projectList;
 
     @InjectMocks
