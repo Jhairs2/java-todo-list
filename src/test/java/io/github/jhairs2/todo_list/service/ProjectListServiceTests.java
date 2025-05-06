@@ -1,6 +1,5 @@
 package io.github.jhairs2.todo_list.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -71,6 +70,24 @@ public class ProjectListServiceTests {
                 .extracting(ProjectListDTO::listTitle)
                 .containsExactly(this.projectList1.getListTitle(), this.projectList2.getListTitle());
 
+    }
+
+    @DisplayName("Test should return all an empty lists")
+    @Test
+    void shouldReturEmptyList_IfNoListsExists() {
+        List<ProjectList> emptyList = List.of();
+        List<ProjectListDTO> emptyListDTO = List.of();
+
+        when(this.projectListRepository.findAll()).thenReturn(emptyList);
+
+        when(projectListDTOMapper.convertProjectsToDTOList(emptyList))
+                .thenReturn(emptyListDTO);
+
+        List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
+
+        Assertions.assertThat(results)
+                .hasSize(0)
+                .isEmpty();
     }
 
 }
