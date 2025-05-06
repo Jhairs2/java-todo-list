@@ -3,12 +3,15 @@ package io.github.jhairs2.todo_list.service;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -74,7 +77,7 @@ public class ProjectListServiceTests {
 
     @DisplayName("Test should return all an empty lists")
     @Test
-    void shouldReturEmptyList_IfNoListsExists() {
+    void shouldReturnEmptyList_IfNoListsExists() {
 
         when(this.projectListRepository.findAll()).thenReturn(List.of());
 
@@ -88,4 +91,17 @@ public class ProjectListServiceTests {
                 .isEmpty();
     }
 
+    @DisplayName("Test should return a single ProjectList that is requested")
+    @Test
+    void shouldReturnSingleProjectList_ifListExists() {
+
+        when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
+        when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+
+        ProjectListDTO results = this.projectListService.getProjectList(1L);
+
+        Assertions.assertThat(results)
+                .isNotNull()
+                .isEqualTo(this.projectList1DTO);
+    }
 }
