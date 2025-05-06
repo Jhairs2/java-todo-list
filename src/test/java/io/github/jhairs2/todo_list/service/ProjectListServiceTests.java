@@ -66,7 +66,7 @@ public class ProjectListServiceTests {
 
         List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
 
-        Assertions.assertThat(results.get(0).projectTitle()).isEqualTo(this.projectList1.getListTitle());
+        Assertions.assertThat(results.get(0).listTitle()).isEqualTo(this.projectList1.getListTitle());
         assertEquals(2, results.size());
 
     }
