@@ -75,13 +75,11 @@ public class ProjectListServiceTests {
     @DisplayName("Test should return all an empty lists")
     @Test
     void shouldReturEmptyList_IfNoListsExists() {
-        List<ProjectList> emptyList = List.of();
-        List<ProjectListDTO> emptyListDTO = List.of();
 
-        when(this.projectListRepository.findAll()).thenReturn(emptyList);
+        when(this.projectListRepository.findAll()).thenReturn(List.of());
 
-        when(projectListDTOMapper.convertProjectsToDTOList(emptyList))
-                .thenReturn(emptyListDTO);
+        when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
+                .thenReturn(List.of());
 
         List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
 
