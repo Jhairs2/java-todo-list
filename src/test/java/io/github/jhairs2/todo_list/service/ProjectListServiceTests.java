@@ -57,7 +57,7 @@ public class ProjectListServiceTests {
 
     @DisplayName("Test should return all ProjectLists")
     @Test
-    void getAllProjectListTest_ShouldReturnAllProjects() {
+    void shouldReturnAllProjectLists_IfListsExist() {
 
         when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
 
@@ -66,8 +66,10 @@ public class ProjectListServiceTests {
 
         List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
 
-        Assertions.assertThat(results.get(0).listTitle()).isEqualTo(this.projectList1.getListTitle());
-        assertEquals(2, results.size());
+        Assertions.assertThat(results)
+                .hasSize(2)
+                .extracting(ProjectListDTO::listTitle)
+                .containsExactly(this.projectList1.getListTitle(), this.projectList2.getListTitle());
 
     }
 
