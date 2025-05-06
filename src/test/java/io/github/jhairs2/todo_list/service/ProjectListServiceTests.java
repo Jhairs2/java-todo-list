@@ -29,14 +29,29 @@ public class ProjectListServiceTests {
     @Mock
     private ProjectListDTOMapper projectListDTOMapper;
 
-    private ProjectList projectList;
+    private ProjectList projectList1;
+    private ProjectList projectList2;
+    private ProjectListDTO projectList1DTO;
+    private ProjectListDTO projectList2DTO;
+    private List<ProjectList> testProjectList;
+    private List<ProjectListDTO> testProjectListDTO;
 
     @InjectMocks
     private ProjectListService projectListService;
 
     @BeforeEach
     void setUp() {
-        this.projectList = new ProjectList("TestProject");
+        this.projectList1 = new ProjectList("TestProject1");
+        this.projectList1.setId(1L);
+
+        this.projectList2 = new ProjectList("TestProject2");
+        this.projectList2.setId(2L);
+
+        this.projectList1DTO = new ProjectListDTO(this.projectList1.getId(), this.projectList1.getListTitle());
+        this.projectList2DTO = new ProjectListDTO(this.projectList2.getId(), this.projectList2.getListTitle());
+
+        this.testProjectList = List.of(this.projectList1, this.projectList2);
+        this.testProjectListDTO = List.of(this.projectList1DTO, this.projectList2DTO);
 
     }
 
@@ -44,14 +59,15 @@ public class ProjectListServiceTests {
     @Test
     void getAllProjectListTest_ShouldReturnAllProjects() {
 
-        when(this.projectListRepository.findAll()).thenReturn(List.of(this.projectList));
-        when(projectListDTOMapper.convertProjectsToDTOList(List.of(this.projectList)))
-                .thenReturn(List.of(new ProjectListDTO(this.projectList.getId(), this.projectList.getListTitle())));
+        when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
+
+        when(projectListDTOMapper.convertProjectsToDTOList(this.testProjectList))
+                .thenReturn(this.testProjectListDTO);
 
         List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
 
-        Assertions.assertThat(results.get(0).projectTitle()).isEqualTo(this.projectList.getListTitle());
-        assertEquals(1, results.size());
+        Assertions.assertThat(results.get(0).projectTitle()).isEqualTo(this.projectList1.getListTitle());
+        assertEquals(2, results.size());
 
     }
 
