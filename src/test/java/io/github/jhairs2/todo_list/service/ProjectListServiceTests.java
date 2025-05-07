@@ -113,4 +113,40 @@ public class ProjectListServiceTests {
                                 .hasMessage("Project with that id can not be found.");
 
         }
+
+        @DisplayName("Test should return an updated ProjectList")
+        @Test
+        void shouldReturnUpdatedProjectList_IfValidArgsPassed() {
+                ProjectList newProjectList = new ProjectList("New Title");
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
+
+                this.projectList1.setListTitle(newProjectList.getListTitle());
+
+                when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
+                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1))
+                                .thenReturn(new ProjectListDTO(1L, this.projectList1.getListTitle()));
+
+                ProjectListDTO results = this.projectListService.updateProjectList(1L, newProjectList);
+
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .extracting("listTitle", "id")
+                                .containsExactly(newProjectList.getListTitle(), 1L);
+
+        }
+
+        @DisplayName("Test should return the deleted list")
+        @Test
+        void shouldReturnDeletedProjectList_IfValidIdPassed() {
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
+                this.projectListRepository.delete(this.projectList1);
+
+                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+
+                ProjectListDTO results = this.projectListService.deleteProjectList(1L);
+
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .isEqualTo(this.projectList1DTO);
+        }
 }
