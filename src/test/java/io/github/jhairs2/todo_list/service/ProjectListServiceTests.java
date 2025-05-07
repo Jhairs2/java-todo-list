@@ -117,21 +117,31 @@ public class ProjectListServiceTests {
         @DisplayName("Test should return an updated ProjectList")
         @Test
         void shouldReturnUpdatedProjectList_IfValidArgsPassed() {
-                ProjectList newProjectList = new ProjectList("New Title");
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
 
-                this.projectList1.setListTitle(newProjectList.getListTitle());
+                this.projectList1.setListTitle(this.projectList2.getListTitle());
 
                 when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1))
-                                .thenReturn(new ProjectListDTO(1L, this.projectList1.getListTitle()));
+                                .thenReturn(this.projectList2DTO);
 
-                ProjectListDTO results = this.projectListService.updateProjectList(1L, newProjectList);
+                ProjectListDTO results = this.projectListService.updateProjectList(1L, projectList2);
 
                 Assertions.assertThat(results)
                                 .isNotNull()
-                                .extracting("listTitle", "id")
-                                .containsExactly(newProjectList.getListTitle(), 1L);
+                                .extracting("listTitle")
+                                .isEqualTo(projectList2DTO.listTitle());
+
+        }
+
+        @DisplayName("Test should throw exception when a requested list cannot be found")
+        @Test
+        void shouldThrowException_IfListToUpdateIsNotFound() {
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
+
+                Assertions.assertThatThrownBy(() -> this.projectListService.updateProjectList(1L, this.projectList2))
+                                .isInstanceOf(ProjectListNotFoundException.class)
+                                .hasMessage("Project with that id can not be found.");
 
         }
 
@@ -149,4 +159,16 @@ public class ProjectListServiceTests {
                                 .isNotNull()
                                 .isEqualTo(this.projectList1DTO);
         }
+
+        @DisplayName("Test should throw exception when a requested list cannot be found")
+        @Test
+        void shouldThrowException_IfListToDeleteIsNotFound() {
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
+
+                Assertions.assertThatThrownBy(() -> this.projectListService.deleteProjectList(1L))
+                                .isInstanceOf(ProjectListNotFoundException.class)
+                                .hasMessage("Project with that id can not be found.");
+
+        }
+
 }
