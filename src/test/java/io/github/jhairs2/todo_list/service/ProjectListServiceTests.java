@@ -24,94 +24,94 @@ import io.github.jhairs2.todo_list.todo.service.ProjectListService;
 @ExtendWith(MockitoExtension.class)
 public class ProjectListServiceTests {
 
-    @Mock
-    private ProjectListRepository projectListRepository;
+        @Mock
+        private ProjectListRepository projectListRepository;
 
-    @Mock
-    private ProjectListDTOMapper projectListDTOMapper;
+        @Mock
+        private ProjectListDTOMapper projectListDTOMapper;
 
-    private ProjectList projectList1;
-    private ProjectList projectList2;
-    private ProjectListDTO projectList1DTO;
-    private ProjectListDTO projectList2DTO;
-    private List<ProjectList> testProjectList;
-    private List<ProjectListDTO> testProjectListDTO;
+        private ProjectList projectList1;
+        private ProjectList projectList2;
+        private ProjectListDTO projectList1DTO;
+        private ProjectListDTO projectList2DTO;
+        private List<ProjectList> testProjectList;
+        private List<ProjectListDTO> testProjectListDTO;
 
-    @InjectMocks
-    private ProjectListService projectListService;
+        @InjectMocks
+        private ProjectListService projectListService;
 
-    @BeforeEach
-    void setUp() {
-        this.projectList1 = new ProjectList("TestProject1");
-        this.projectList1.setId(1L);
+        @BeforeEach
+        void setUp() {
+                this.projectList1 = new ProjectList("TestProject1");
+                this.projectList1.setId(1L);
 
-        this.projectList2 = new ProjectList("TestProject2");
-        this.projectList2.setId(2L);
+                this.projectList2 = new ProjectList("TestProject2");
+                this.projectList2.setId(2L);
 
-        this.projectList1DTO = new ProjectListDTO(this.projectList1.getId(), this.projectList1.getListTitle());
-        this.projectList2DTO = new ProjectListDTO(this.projectList2.getId(), this.projectList2.getListTitle());
+                this.projectList1DTO = new ProjectListDTO(this.projectList1.getId(), this.projectList1.getListTitle());
+                this.projectList2DTO = new ProjectListDTO(this.projectList2.getId(), this.projectList2.getListTitle());
 
-        this.testProjectList = List.of(this.projectList1, this.projectList2);
-        this.testProjectListDTO = List.of(this.projectList1DTO, this.projectList2DTO);
+                this.testProjectList = List.of(this.projectList1, this.projectList2);
+                this.testProjectListDTO = List.of(this.projectList1DTO, this.projectList2DTO);
 
-    }
+        }
 
-    @DisplayName("Test should return all ProjectLists")
-    @Test
-    void shouldReturnAllProjectLists_IfListsExist() {
+        @DisplayName("Test should return all ProjectLists")
+        @Test
+        void shouldReturnAllProjectLists_IfListsExist() {
 
-        when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
+                when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
 
-        when(projectListDTOMapper.convertProjectsToDTOList(this.testProjectList))
-                .thenReturn(this.testProjectListDTO);
+                when(projectListDTOMapper.convertProjectsToDTOList(this.testProjectList))
+                                .thenReturn(this.testProjectListDTO);
 
-        List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
+                List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
 
-        Assertions.assertThat(results)
-                .hasSize(2)
-                .extracting(ProjectListDTO::listTitle)
-                .containsExactly(this.projectList1.getListTitle(), this.projectList2.getListTitle());
+                Assertions.assertThat(results)
+                                .hasSize(2)
+                                .extracting(ProjectListDTO::listTitle)
+                                .containsExactly(this.projectList1.getListTitle(), this.projectList2.getListTitle());
 
-    }
+        }
 
-    @DisplayName("Test should return all an empty lists")
-    @Test
-    void shouldReturnEmptyList_IfNoListsExists() {
-        when(this.projectListRepository.findAll()).thenReturn(List.of());
+        @DisplayName("Test should return an empty list")
+        @Test
+        void shouldReturnEmptyList_IfNoListsExists() {
+                when(this.projectListRepository.findAll()).thenReturn(List.of());
 
-        when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
-                .thenReturn(List.of());
+                when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
+                                .thenReturn(List.of());
 
-        List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
+                List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
 
-        Assertions.assertThat(results)
-                .hasSize(0)
-                .isEmpty();
-    }
+                Assertions.assertThat(results)
+                                .hasSize(0)
+                                .isEmpty();
+        }
 
-    @DisplayName("Test should return a single ProjectList that is requested")
-    @Test
-    void shouldReturnSingleProjectList_ifListExists() {
+        @DisplayName("Test should return a single ProjectList that is requested")
+        @Test
+        void shouldReturnSingleProjectList_ifListExists() {
 
-        when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
-        when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
+                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
 
-        ProjectListDTO results = this.projectListService.getProjectList(1L);
+                ProjectListDTO results = this.projectListService.getProjectList(1L);
 
-        Assertions.assertThat(results)
-                .isNotNull()
-                .isEqualTo(this.projectList1DTO);
-    }
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .isEqualTo(this.projectList1DTO);
+        }
 
-    @DisplayName("Test that should throw exception when a requested list cannot be found")
-    @Test
-    void shouldThrowException_IfListIsNotFound() {
-        when(this.projectListRepository.findById(1L))
-                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+        @DisplayName("Test should throw exception when a requested list cannot be found")
+        @Test
+        void shouldThrowException_IfListIsNotFound() {
+                when(this.projectListRepository.findById(1L))
+                                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
 
-        Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
-                .isInstanceOf(ProjectListNotFoundException.class)
-                .hasMessage("Project with that id can not be found.");
+                Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
+                                .isInstanceOf(ProjectListNotFoundException.class)
+                                .hasMessage("Project with that id can not be found.");
 
-    }
+        }
 }
