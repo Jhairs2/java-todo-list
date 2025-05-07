@@ -10,6 +10,7 @@ import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
 import io.github.jhairs2.todo_list.todo.mapper.ProjectListDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProjectListService {
@@ -35,6 +36,7 @@ public class ProjectListService {
                         .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found.")));
     }
 
+    @Transactional
     public ProjectListDTO updateProjectList(Long id, ProjectList projectList) {
         ProjectList newProject = this.projectListRepository.findById(id)
                 .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found."));
