@@ -10,13 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
+import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
 import io.github.jhairs2.todo_list.todo.mapper.ProjectListDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
@@ -78,7 +77,6 @@ public class ProjectListServiceTests {
     @DisplayName("Test should return all an empty lists")
     @Test
     void shouldReturnEmptyList_IfNoListsExists() {
-
         when(this.projectListRepository.findAll()).thenReturn(List.of());
 
         when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
@@ -103,5 +101,17 @@ public class ProjectListServiceTests {
         Assertions.assertThat(results)
                 .isNotNull()
                 .isEqualTo(this.projectList1DTO);
+    }
+
+    @DisplayName("Test that should throw exception when a requested list cannot be found")
+    @Test
+    void shouldThrowException_IfListIsNotFound() {
+        when(this.projectListRepository.findById(1L))
+                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+
+        Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
+                .isInstanceOf(ProjectListNotFoundException.class)
+                .hasMessage("Project with that id can not be found.");
+
     }
 }
