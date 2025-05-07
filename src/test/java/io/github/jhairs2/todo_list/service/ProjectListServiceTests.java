@@ -106,8 +106,7 @@ public class ProjectListServiceTests {
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
         void shouldThrowException_IfListIsNotFound() {
-                when(this.projectListRepository.findById(1L))
-                                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
                                 .isInstanceOf(ProjectListNotFoundException.class)
