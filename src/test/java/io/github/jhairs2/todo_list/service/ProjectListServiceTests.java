@@ -1,5 +1,7 @@
 package io.github.jhairs2.todo_list.service;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -132,6 +134,8 @@ public class ProjectListServiceTests {
                                 .extracting("listTitle")
                                 .isEqualTo(projectList2DTO.listTitle());
 
+                verify(this.projectListRepository).save(this.projectList1);
+
         }
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
@@ -149,7 +153,6 @@ public class ProjectListServiceTests {
         @Test
         void shouldReturnDeletedProjectList_IfValidIdPassed() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
-                this.projectListRepository.delete(this.projectList1);
 
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
 
@@ -158,6 +161,8 @@ public class ProjectListServiceTests {
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .isEqualTo(this.projectList1DTO);
+
+                verify(this.projectListRepository).delete(this.projectList1);
         }
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
