@@ -53,4 +53,23 @@ public class ProjectListControllerTests {
                 .andDo(print()).andExpect(status().isOk());
     }
 
+    @DisplayName("Test should return a empty list")
+    @Test
+    void shouldReturnEmptyList_IfNoListsExists() throws Exception {
+        when(this.projectListService.getAllProjectLists()).thenReturn(List.of());
+
+        this.mockMvc.perform(get("/api/v1/projects"))
+                .andDo(print()).andExpect(status().isOk());
+
+    }
+
+    @DisplayName("Test should return a single ProjectList")
+    @Test
+    void shouldReturnSingleProjectList_ifListExists() throws Exception {
+        when(this.projectListService.getProjectList(1L)).thenReturn(this.projectListDTO1);
+
+        this.mockMvc.perform(get("/api/v1/projects/1"))
+                .andDo(print()).andExpect(status().isOk());
+    }
+
 }
