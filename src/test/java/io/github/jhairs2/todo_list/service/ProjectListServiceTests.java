@@ -1,6 +1,5 @@
 package io.github.jhairs2.todo_list.service;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
