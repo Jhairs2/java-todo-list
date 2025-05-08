@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import io.github.jhairs2.todo_list.todo.controller.ProjectListController;
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
+import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
 import io.github.jhairs2.todo_list.todo.service.ProjectListService;
 
 @WebMvcTest(ProjectListController.class)
@@ -76,6 +77,18 @@ public class ProjectListControllerTests {
                 .andDo(print())
                 .andExpect(jsonPath("$.listTitle").value("Test1"))
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("Test should return an ProjectListNotFoundException")
+    @Test
+    void shouldThrowException_IfListIsNotFound() throws Exception {
+        when(this.projectListService.getProjectList(1L))
+                .thenThrow(new ProjectListNotFoundException("Project with that id cannot be found"));
+
+        this.mockMvc.perform(get("/api/v1/projects/1"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Project with that id cannot be found"));
     }
 
 }
