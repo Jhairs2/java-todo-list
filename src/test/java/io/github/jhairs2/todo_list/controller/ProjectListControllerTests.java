@@ -55,7 +55,7 @@ public class ProjectListControllerTests {
                 .andExpect(jsonPath("$[0].listTitle").value("Test1"))
                 .andExpect(jsonPath("$[1].listTitle").value("Test2"))
                 .andExpect(status().isOk());
-    };
+    }
 
     @DisplayName("Test should return a empty list")
     @Test
@@ -79,7 +79,7 @@ public class ProjectListControllerTests {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("Test should return an ProjectListNotFoundException")
+    @DisplayName("Test should return a ProjectListNotFoundException")
     @Test
     void shouldThrowException_IfListIsNotFound() throws Exception {
         when(this.projectListService.getProjectList(1L))
