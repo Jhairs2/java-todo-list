@@ -50,8 +50,11 @@ public class ProjectListControllerTests {
         when(this.projectListService.getAllProjectLists()).thenReturn(this.projectDTOs);
 
         this.mockMvc.perform(get("/api/v1/projects"))
-                .andDo(print()).andExpect(status().isOk());
-    }
+                .andDo(print())
+                .andExpect(jsonPath("$[0].listTitle").value("Test1"))
+                .andExpect(jsonPath("$[1].listTitle").value("Test2"))
+                .andExpect(status().isOk());
+    };
 
     @DisplayName("Test should return a empty list")
     @Test
@@ -59,8 +62,9 @@ public class ProjectListControllerTests {
         when(this.projectListService.getAllProjectLists()).thenReturn(List.of());
 
         this.mockMvc.perform(get("/api/v1/projects"))
-                .andDo(print()).andExpect(status().isOk());
-
+                .andDo(print())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(status().isOk());
     }
 
     @DisplayName("Test should return a single ProjectList")
@@ -69,7 +73,9 @@ public class ProjectListControllerTests {
         when(this.projectListService.getProjectList(1L)).thenReturn(this.projectListDTO1);
 
         this.mockMvc.perform(get("/api/v1/projects/1"))
-                .andDo(print()).andExpect(status().isOk());
+                .andDo(print())
+                .andExpect(jsonPath("$.listTitle").value("Test1"))
+                .andExpect(status().isOk());
     }
 
 }
