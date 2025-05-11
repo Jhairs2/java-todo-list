@@ -128,7 +128,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should throw a ProjectNotFOundException if List to update is not found")
         @Test
-        void shouldThrowException_IfListToUpdateIsNotFound() throws Exception {
+        void shouldThrowProjectNotFoundException_IfListToUpdateIsNotFound() throws Exception {
                 ProjectList emptyProjectList = new ProjectList();
 
                 when(this.projectListService.updateProjectList(eq(1L), any(ProjectList.class)))
@@ -155,6 +155,19 @@ public class ProjectListControllerTests {
                                 .andExpect(jsonPath("$.id").value(this.projectListDTO1.id()))
                                 .andExpect(jsonPath("$.listTitle").value(this.projectListDTO1.listTitle()));
 
+        }
+
+        @DisplayName("Test should throw a ProjectNotFOundException if List to delete is not found")
+        @Test
+        void shouldThrowProjectNotFoundException_IfListToDeleteIsNotFound() throws Exception {
+
+                when(this.projectListService.deleteProjectList(1L))
+                                .thenThrow(new ProjectListNotFoundException("Project with that id does not exist"));
+
+                this.mockMvc.perform(delete("/api/v1/projects/{projectListId}", 1L))
+                                .andDo(print())
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("Project with that id does not exist"));
         }
 
 }
