@@ -1,7 +1,10 @@
 package io.github.jhairs2.todo_list.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,11 +17,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.github.jhairs2.todo_list.todo.controller.ProjectListController;
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
 import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
+import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.service.ProjectListService;
 
 @WebMvcTest(ProjectListController.class)
@@ -26,6 +34,9 @@ public class ProjectListControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockitoBean
     private ProjectListService projectListService;
@@ -89,6 +100,29 @@ public class ProjectListControllerTests {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Project with that id cannot be found"));
+    }
+
+    @DisplayName("Test should return the updated project")
+    @Test
+    void shouldReturnUpdatedProjectList_IfListExists() throws Exception {
+
+        ProjectList newProject = new ProjectList("New Test");
+        newProject.setId(this.projectListDTO1.id());
+
+        ProjectListDTO updatedProject = new ProjectListDTO(newProject.getId(), newProject.getListTitle());
+        String requestBody = this.objectMapper.writeValueAsString(updatedProject);
+
+        when(this.projectListService.updateProjectList(eq(1L), any(ProjectList.class)))
+                .thenReturn(updatedProject);
+
+        this.mockMvc.perform(put("/api/v1/projects/{projectListId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(updatedProject.id()))
+                .andExpect(jsonPath("$.listTitle").value(updatedProject.listTitle()));
+
     }
 
 }
