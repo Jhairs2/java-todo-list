@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -105,7 +106,19 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return the created projectList")
         @Test
-        void shouldReturnCreatedProjectList_IfValidArgs() {
+        void shouldReturnCreatedProjectList_IfValidArgs() throws Exception {
+                ProjectList newProjectList = new ProjectList("New List");
+                String requestBody = this.objectMapper.writeValueAsString(newProjectList);
+
+                when(this.projectListService.createNewProjectList(any(ProjectList.class)))
+                                .thenReturn(new ProjectListDTO(3L, newProjectList.getListTitle()));
+
+                this.mockMvc.perform(post("/api/v1/projects")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.listTitle").value(newProjectList.getListTitle()));
 
         }
 
