@@ -103,6 +103,12 @@ public class ProjectListControllerTests {
                                 .andExpect(jsonPath("$.message").value("Project with that id cannot be found"));
         }
 
+        @DisplayName("Test should return the created projectList")
+        @Test
+        void shouldReturnCreatedProjectList_IfValidArgs() {
+
+        }
+
         @DisplayName("Test should return the updated project")
         @Test
         void shouldReturnUpdatedProjectList_IfListExists() throws Exception {
