@@ -36,6 +36,13 @@ public class ProjectListService {
                         .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found.")));
     }
 
+    public ProjectListDTO createNewProjectList(ProjectList projectList) {
+        if (projectList == null) {
+            throw new IllegalArgumentException();
+        }
+        return this.projectListDTOMapper.convertProjectToDTO(this.projectListRepository.save(projectList));
+    }
+
     @Transactional
     public ProjectListDTO updateProjectList(Long id, ProjectList projectList) {
         ProjectList newProject = this.projectListRepository.findById(id)
