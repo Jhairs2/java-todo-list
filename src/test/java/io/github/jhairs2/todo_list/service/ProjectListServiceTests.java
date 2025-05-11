@@ -122,14 +122,21 @@ public class ProjectListServiceTests {
 
                 this.projectList1.setListTitle(this.projectList2.getListTitle());
 
+                ProjectListDTO updatedProject = new ProjectListDTO(this.projectList1.getId(),
+                                this.projectList1.getListTitle());
+
                 when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1))
-                                .thenReturn(this.projectList2DTO);
+                                .thenReturn(updatedProject);
 
                 ProjectListDTO results = this.projectListService.updateProjectList(1L, projectList2);
 
                 Assertions.assertThat(results)
                                 .isNotNull()
+                                .extracting("id")
+                                .isEqualTo(this.projectList1.getId());
+
+                Assertions.assertThat(results)
                                 .extracting("listTitle")
                                 .isEqualTo(projectList2DTO.listTitle());
 
