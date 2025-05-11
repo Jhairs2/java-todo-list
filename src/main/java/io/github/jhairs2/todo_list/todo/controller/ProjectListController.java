@@ -37,6 +37,11 @@ public class ProjectListController {
         return this.projectListService.getProjectList(id);
     }
 
+    @PostMapping
+    public ProjectListDTO createNewProjectList(@RequestBody ProjectList projectList) {
+        return this.projectListService.createNewProjectList(projectList);
+    }
+
     @PutMapping(path = "/{projectListId}")
     public ProjectListDTO updateProjectList(@PathVariable("projectListId") Long id,
             @RequestBody ProjectList projectList) {
