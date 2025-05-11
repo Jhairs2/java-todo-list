@@ -2,7 +2,9 @@ package io.github.jhairs2.todo_list.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -122,6 +124,21 @@ public class ProjectListControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedProject.id()))
                 .andExpect(jsonPath("$.listTitle").value(updatedProject.listTitle()));
+
+    }
+
+    @DisplayName("Test should return deleted project")
+    @Test
+    void shouldReturnDeletedProjectList_IfValidIdPassed() throws Exception {
+
+        when(this.projectListService.deleteProjectList(1L))
+                .thenReturn(this.projectListDTO1);
+
+        this.mockMvc.perform(delete("/api/v1/projects/{projectListId}", 1L))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(this.projectListDTO1.id()))
+                .andExpect(jsonPath("$.listTitle").value(this.projectListDTO1.listTitle()));
 
     }
 
