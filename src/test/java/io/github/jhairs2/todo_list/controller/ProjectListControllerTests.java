@@ -117,7 +117,7 @@ public class ProjectListControllerTests {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
                                 .andDo(print())
-                                .andExpect(status().isOk())
+                                .andExpect(status().isCreated())
                                 .andExpect(jsonPath("$.listTitle").value(newProjectList.getListTitle()));
 
         }

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
@@ -38,6 +40,7 @@ public class ProjectListController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ProjectListDTO createNewProjectList(@RequestBody ProjectList projectList) {
         return this.projectListService.createNewProjectList(projectList);
     }
