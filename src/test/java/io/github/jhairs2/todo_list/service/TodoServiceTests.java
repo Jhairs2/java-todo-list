@@ -83,4 +83,23 @@ public class TodoServiceTests {
 
     }
 
+    @DisplayName("Test should return an empty list if project has no tasks")
+    @Test
+    void shouldReturnEmptyList_IfProjectListsExistsButNoTasks() {
+
+        // Arrange
+        List<TodoItemDTO> emptyList = List.of();
+        when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
+        when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks())).thenReturn(emptyList);
+
+        // Act
+        List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
+
+        // Assert
+        Assertions.assertThat(results)
+                .isNotNull()
+                .hasSize(0);
+
+    }
+
 }
