@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
+import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
 import io.github.jhairs2.todo_list.todo.mapper.TodoItemDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
@@ -25,81 +26,95 @@ import io.github.jhairs2.todo_list.todo.service.TodoService;
 @ExtendWith(MockitoExtension.class)
 public class TodoServiceTests {
 
-    @Mock
-    private TodoRepository todoRepository;
+        @Mock
+        private TodoRepository todoRepository;
 
-    @Mock
-    private ProjectListRepository projectListRepository;
+        @Mock
+        private ProjectListRepository projectListRepository;
 
-    @Mock
-    private TodoItemDTOMapper todoItemDTOMapper;
+        @Mock
+        private TodoItemDTOMapper todoItemDTOMapper;
 
-    @InjectMocks
-    private TodoService todoService;
+        @InjectMocks
+        private TodoService todoService;
 
-    private TodoItem todoItem;
-    private ProjectList projectList;
-    private TodoItemDTO todoItemDTO;
+        private TodoItem todoItem;
+        private ProjectList projectList;
+        private TodoItemDTO todoItemDTO;
 
-    @BeforeEach
-    void setUp() {
-        this.projectList = new ProjectList("testProject");
-        this.todoItem = new TodoItem("Test task");
+        @BeforeEach
+        void setUp() {
+                this.projectList = new ProjectList("testProject");
+                this.todoItem = new TodoItem("Test task");
 
-        this.projectList.getTasks().add(this.todoItem);
-        this.todoItem.setList(this.projectList);
+                this.projectList.getTasks().add(this.todoItem);
+                this.todoItem.setList(this.projectList);
 
-        this.todoItemDTO = new TodoItemDTO(1L, this.todoItem.getTask(), false, this.projectList.getListTitle());
+                this.todoItemDTO = new TodoItemDTO(1L, this.todoItem.getTask(), false, this.projectList.getListTitle());
 
-    }
+        }
 
-    @DisplayName("Test should return all tasks of the project")
-    @Test
-    void shouldReturnAllTasksFromProjectList_IfProjectListsExists() {
-        // Arrange
-        when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
-        when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
-                .thenReturn(List.of(this.todoItemDTO));
+        @DisplayName("Test should return all tasks of the project")
+        @Test
+        void shouldReturnAllTasksFromProjectList_IfProjectListsExists() {
+                // Arrange
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
+                when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
+                                .thenReturn(List.of(this.todoItemDTO));
 
-        // Act
-        List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
+                // Act
+                List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
 
-        // Assert
-        Assertions.assertThat(results)
-                .isNotNull()
-                .hasSize(1);
+                // Assert
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .hasSize(1);
 
-        Assertions.assertThat(results)
-                .extracting("id")
-                .containsExactly(this.todoItemDTO.id());
+                Assertions.assertThat(results)
+                                .extracting("id")
+                                .containsExactly(this.todoItemDTO.id());
 
-        Assertions.assertThat(results)
-                .extracting("task")
-                .containsExactly(this.todoItemDTO.task());
+                Assertions.assertThat(results)
+                                .extracting("task")
+                                .containsExactly(this.todoItemDTO.task());
 
-        Assertions.assertThat(results)
-                .extracting("listTitle")
-                .containsExactly(this.todoItemDTO.listTitle());
+                Assertions.assertThat(results)
+                                .extracting("listTitle")
+                                .containsExactly(this.todoItemDTO.listTitle());
 
-    }
+        }
 
-    @DisplayName("Test should return an empty list if project has no tasks")
-    @Test
-    void shouldReturnEmptyList_IfProjectListsExistsButNoTasks() {
+        @DisplayName("Test should return an empty list if project has no tasks")
+        @Test
+        void shouldReturnEmptyList_IfProjectListsExistsButNoTasks() {
 
-        // Arrange
-        List<TodoItemDTO> emptyList = List.of();
-        when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
-        when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks())).thenReturn(emptyList);
+                // Arrange
+                List<TodoItemDTO> emptyList = List.of();
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
+                when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
+                                .thenReturn(emptyList);
 
-        // Act
-        List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
+                // Act
+                List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
 
-        // Assert
-        Assertions.assertThat(results)
-                .isNotNull()
-                .hasSize(0);
+                // Assert
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .hasSize(0);
 
-    }
+        }
 
+        @DisplayName("Test should return a ProjectNotFoundException if project is not found")
+        @Test
+        void shouldReturnProjectNotFoundException_IfListsDoesNotExist() {
+
+                // Arrange
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
+
+                // Act / Assert
+                Assertions.assertThatThrownBy(() -> this.todoService.getAllTodosFromList(1L))
+                                .isInstanceOf(ProjectListNotFoundException.class)
+                                .hasMessageContaining("Project with that id can not be found.");
+
+        }
 }

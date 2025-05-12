@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GolbalExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = { ProjectListNotFoundException.class, TodoItemNotFoundException.class })
     public ResponseEntity<Object> handleProjectListNotFoundException(
