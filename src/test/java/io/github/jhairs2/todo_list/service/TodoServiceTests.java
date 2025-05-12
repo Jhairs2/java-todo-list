@@ -128,4 +128,40 @@ public class TodoServiceTests {
                 verify(this.todoRepository).save(this.todoItem);
         }
 
+        @DisplayName("Test should return an exception if todo has empty title")
+        @Test
+        void shouldReturnException_WhenNoTitle() {
+                // Arrange
+                TodoItem newTask = new TodoItem("");
+
+                // Act /Assert
+                Assertions.assertThatThrownBy(() -> this.todoService.addTodoToList(1L, newTask))
+                                .isInstanceOf(IllegalArgumentException.class);
+
+        }
+
+        @DisplayName("Test should return an exception if todo is Null")
+        @Test
+        void shouldReturnException_WhenNullTodo() {
+                // Arrange
+                TodoItem newTask = null;
+
+                // Act /Assert
+                Assertions.assertThatThrownBy(() -> this.todoService.addTodoToList(1L, newTask))
+                                .isInstanceOf(IllegalArgumentException.class);
+
+        }
+
+        @DisplayName("Test should return an exception if project cannot be found")
+        @Test
+        void shouldReturnProjectNotFoundException_IfListToAddTask_DoesNotExist() {
+                // Arrange
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
+
+                // Act /Assert
+                Assertions.assertThatThrownBy(() -> this.todoService.addTodoToList(1L, this.todoItem))
+                                .isInstanceOf(ProjectListNotFoundException.class);
+
+        }
+
 }
