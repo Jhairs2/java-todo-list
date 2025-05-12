@@ -1,5 +1,6 @@
 package io.github.jhairs2.todo_list.service;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -68,19 +69,8 @@ public class TodoServiceTests {
                 // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
-                                .hasSize(1);
-
-                Assertions.assertThat(results)
-                                .extracting("id")
-                                .containsExactly(this.todoItemDTO.id());
-
-                Assertions.assertThat(results)
-                                .extracting("task")
-                                .containsExactly(this.todoItemDTO.task());
-
-                Assertions.assertThat(results)
-                                .extracting("listTitle")
-                                .containsExactly(this.todoItemDTO.listTitle());
+                                .hasSize(1)
+                                .isEqualTo(List.of(this.todoItemDTO));
 
         }
 
@@ -117,4 +107,25 @@ public class TodoServiceTests {
                                 .hasMessageContaining("Project with that id can not be found.");
 
         }
+
+        @DisplayName("Test should return the added todoItem")
+        @Test
+        void shouldReturnAddedTodoItem_IfValidArgs() {
+
+                // Arrange
+                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
+                when(this.todoRepository.save(this.todoItem)).thenReturn(this.todoItem);
+                when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
+
+                // Act
+                TodoItemDTO results = this.todoService.addTodoToList(1L, this.todoItem);
+
+                // Assert
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .isEqualTo(this.todoItemDTO);
+
+                verify(this.todoRepository).save(this.todoItem);
+        }
+
 }
