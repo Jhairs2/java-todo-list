@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
-import io.github.jhairs2.todo_list.todo.mapper.ProjectListDTOMapper;
 import io.github.jhairs2.todo_list.todo.mapper.TodoItemDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
@@ -56,7 +55,7 @@ public class TodoServiceTests {
 
     @DisplayName("Test should return all tasks of the project")
     @Test
-    void shouldRetuenAllTasksFromProjectList_IfProjectListsExists() {
+    void shouldReturnAllTasksFromProjectList_IfProjectListsExists() {
         // Arrange
         when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
         when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
