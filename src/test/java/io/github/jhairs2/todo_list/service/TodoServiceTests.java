@@ -164,4 +164,49 @@ public class TodoServiceTests {
 
         }
 
+        @DisplayName("Test should return updated todo")
+        @Test
+        void shouldReturnUpdatedTodoItem_IfValidArgs() {
+                // Arrange
+                TodoItem updatedTask = new TodoItem("Updated Task");
+                when(this.todoRepository.findById(1L)).thenReturn(Optional.of(this.todoItem));
+
+                this.todoItem.setTask(updatedTask.getTask());
+                this.todoItem.setCompleted(updatedTask.isCompleted());
+
+                TodoItemDTO newTask = new TodoItemDTO(this.todoItem.getId(),
+                                this.todoItem.getTask(),
+                                this.todoItem.isCompleted(),
+                                this.todoItem.getList().getListTitle());
+
+                when(this.todoRepository.save(this.todoItem)).thenReturn(this.todoItem);
+                when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(newTask);
+
+                // Act
+                TodoItemDTO results = this.todoService.updateTodoById(1L, updatedTask);
+
+                // Assert
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .isEqualTo(newTask);
+
+        }
+
+        @DisplayName("Test should return deleted Todo")
+        @Test
+        void shouldReturnDeletedTodo_IfTodoExists() {
+                // Arrange
+                when(this.todoRepository.findById(1L)).thenReturn(Optional.of(this.todoItem));
+                when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
+
+                // Act
+                TodoItemDTO results = this.todoService.deleteTodoFromList(1L);
+
+                // Assert
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .isEqualTo(this.todoItemDTO);
+
+                verify(this.todoRepository).delete(this.todoItem);
+        }
 }
