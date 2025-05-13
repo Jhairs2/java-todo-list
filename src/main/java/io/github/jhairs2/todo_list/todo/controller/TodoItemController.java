@@ -17,12 +17,12 @@ import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @RestController
 @RequestMapping(path = "/api/v1/projects/{projectId}/todos")
-public class TodoListController {
+public class TodoItemController {
 
     private final TodoService todoService;
 
     @Autowired
-    public TodoListController(TodoService todoService) {
+    public TodoItemController(TodoService todoService) {
         this.todoService = todoService;
     }
 
