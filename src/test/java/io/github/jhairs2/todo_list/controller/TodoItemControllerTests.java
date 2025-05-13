@@ -1,8 +1,16 @@
 package io.github.jhairs2.todo_list.controller;
 
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -36,6 +44,22 @@ public class TodoItemControllerTests {
         this.todoItemDTO2 = new TodoItemDTO(2L, "Test task2", false, "Example");
 
         this.todoItemList = List.of(this.todoItemDTO, this.todoItemDTO2);
+
+    }
+
+    @DisplayName("Test should return all tasks from project")
+    @Test
+    void shouldReturnAllTasksFromProjectList_IfProjectListsExists() throws Exception {
+        // Arrange
+        when(this.todoService.getAllTodosFromList(1L)).thenReturn(this.todoItemList);
+
+        this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].task").value(this.todoItemDTO.task()))
+                .andExpect(jsonPath("$[1].task").value(this.todoItemDTO2.task()));
+
     }
 
 }
