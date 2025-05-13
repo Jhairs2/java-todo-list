@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
 import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
+import io.github.jhairs2.todo_list.todo.exceptions.TodoItemNotFoundException;
 import io.github.jhairs2.todo_list.todo.mapper.TodoItemDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.model.TodoItem;
@@ -192,6 +193,17 @@ public class TodoServiceTests {
 
         }
 
+        @DisplayName("Test should return exception if Todo to update is not found")
+        @Test
+        void shouldReturnTodoItemNotFoundException_IfTodoToUpdate_DoesNotExist() {
+                // Arrange
+                when(this.todoRepository.findById(1L)).thenReturn(Optional.empty());
+
+                Assertions.assertThatThrownBy(() -> this.todoService.updateTodoById(1L, this.todoItem))
+                                .isInstanceOf(TodoItemNotFoundException.class);
+
+        }
+
         @DisplayName("Test should return deleted Todo")
         @Test
         void shouldReturnDeletedTodo_IfTodoExists() {
@@ -208,5 +220,16 @@ public class TodoServiceTests {
                                 .isEqualTo(this.todoItemDTO);
 
                 verify(this.todoRepository).delete(this.todoItem);
+        }
+
+        @DisplayName("Test should return exception if Todo to delete is not found")
+        @Test
+        void shouldReturnTodoItemNotFoundException_IfTodoToDelete_DoesNotExist() {
+                // Arrange
+                when(this.todoRepository.findById(1L)).thenReturn(Optional.empty());
+
+                Assertions.assertThatThrownBy(() -> this.todoService.deleteTodoFromList(1L))
+                                .isInstanceOf(TodoItemNotFoundException.class);
+
         }
 }
