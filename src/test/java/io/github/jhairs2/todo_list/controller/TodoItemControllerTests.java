@@ -1,7 +1,10 @@
 package io.github.jhairs2.todo_list.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jhairs2.todo_list.todo.controller.TodoItemController;
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
 import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
+import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @WebMvcTest(TodoItemController.class)
@@ -91,6 +96,25 @@ public class TodoItemControllerTests {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
 
+    }
+
+    @DisplayName("Test should return todo that was added")
+    @Test
+    void shouldReturnAddedTodo_IfValidArgs() throws Exception {
+        // Arrange
+        TodoItem todo = new TodoItem("New Task");
+        when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                .thenReturn(new TodoItemDTO(1L, todo.getTask(), todo.isCompleted(), "Example"));
+
+        String requestBody = this.objectMapper.writeValueAsString(todo);
+
+        // Act / Assert
+        this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.task").value(todo.getTask()));
     }
 
 }
