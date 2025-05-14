@@ -117,7 +117,7 @@ public class TodoItemControllerTests {
                 .andExpect(jsonPath("$.task").value(todo.getTask()));
     }
 
-    @DisplayName("Test should return todo that was added")
+    @DisplayName("Test should return exception if project to add todo is not found")
     @Test
     void shouldReturnProjectNotFoundException_IfListToAddTodo_IsNotFound() throws Exception {
         // Arrange
@@ -134,6 +134,25 @@ public class TodoItemControllerTests {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
+    }
+
+    @DisplayName("Test should return exception if invalid TodoItem argument")
+    @Test
+    void shouldReturnException_IfInvalidTodoItemArg() throws Exception {
+        // Arrange
+        TodoItem todo = new TodoItem("");
+        when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
+
+        String requestBody = this.objectMapper.writeValueAsString(todo);
+
+        // Act / Assert
+        this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Task cannot be blank or null"));
     }
 
 }
