@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.jhairs2.todo_list.todo.controller.TodoItemController;
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
+import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
 import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @WebMvcTest(TodoItemController.class)
@@ -53,12 +54,28 @@ public class TodoItemControllerTests {
         // Arrange
         when(this.todoService.getAllTodosFromList(1L)).thenReturn(this.todoItemList);
 
+        // Act / Assert
         this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].task").value(this.todoItemDTO.task()))
                 .andExpect(jsonPath("$[1].task").value(this.todoItemDTO2.task()));
+
+    }
+
+    @DisplayName("Test should return exception if project cannot be found")
+    @Test
+    void shouldReturnProjectNotFoundException_IfNotFound() throws Exception {
+        // Arrange
+        when(this.todoService.getAllTodosFromList(1L))
+                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+
+        // Act / Assert
+        this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
 
     }
 
