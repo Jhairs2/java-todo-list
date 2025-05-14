@@ -64,6 +64,20 @@ public class TodoItemControllerTests {
 
     }
 
+    @DisplayName("Test should return empty list when project has no task")
+    @Test
+    void shouldReturnEmptyList_IfProjectList_HasNoTasks() throws Exception {
+        // Arrange
+        when(this.todoService.getAllTodosFromList(1L)).thenReturn(List.of());
+
+        // Act / Assert
+        this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+
+    }
+
     @DisplayName("Test should return exception if project cannot be found")
     @Test
     void shouldReturnProjectNotFoundException_IfNotFound() throws Exception {
