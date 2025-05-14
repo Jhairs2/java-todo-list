@@ -117,4 +117,23 @@ public class TodoItemControllerTests {
                 .andExpect(jsonPath("$.task").value(todo.getTask()));
     }
 
+    @DisplayName("Test should return todo that was added")
+    @Test
+    void shouldReturnProjectNotFoundException_IfListToAddTodo_IsNotFound() throws Exception {
+        // Arrange
+        TodoItem todo = new TodoItem("New Task");
+        when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+
+        String requestBody = this.objectMapper.writeValueAsString(todo);
+
+        // Act / Assert
+        this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
+    }
+
 }
