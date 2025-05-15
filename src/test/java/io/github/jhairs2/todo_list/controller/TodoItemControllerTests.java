@@ -3,6 +3,7 @@ package io.github.jhairs2.todo_list.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -185,6 +186,7 @@ public class TodoItemControllerTests {
 
                 String requestBody = this.objectMapper.writeValueAsString(updatedTodo);
 
+                // Act / Assert
                 this.mockMvc.perform(put("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -203,9 +205,40 @@ public class TodoItemControllerTests {
 
                 String requestBody = this.objectMapper.writeValueAsString(updatedTodo);
 
+                // Act / Assert
                 this.mockMvc.perform(put("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
+                                .andDo(print())
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("Task with that id does not exist."));
+        }
+
+        @DisplayName("Test should return deleted TodoItem")
+        @Test
+        void shouldReturnDeletedTodoItem_IfValidArgs() throws Exception {
+                // Arrange
+                when(this.todoService.deleteTodoFromList(1L)).thenReturn(this.todoItemDTO);
+
+                // Act / Assert
+                this.mockMvc.perform(delete("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.id").value(this.todoItemDTO.id()))
+                                .andExpect(jsonPath("$.task").value(this.todoItemDTO.task()));
+
+        }
+
+        @DisplayName("Test should return exception when todo to delete cannot be found")
+        @Test
+        void shouldReturntTodoItemNotFoundException_IfTodoItemToDelete_NotFound() throws Exception {
+
+                // Arrange
+                when(this.todoService.deleteTodoFromList(1L))
+                                .thenThrow(new TodoItemNotFoundException("Task with that id does not exist."));
+
+                // Act / Assert
+                this.mockMvc.perform(delete("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L))
                                 .andDo(print())
                                 .andExpect(status().isNotFound())
                                 .andExpect(jsonPath("$.message").value("Task with that id does not exist."));
