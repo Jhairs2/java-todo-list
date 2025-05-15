@@ -31,128 +31,147 @@ import io.github.jhairs2.todo_list.todo.service.TodoService;
 @WebMvcTest(TodoItemController.class)
 public class TodoItemControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private TodoService todoService;
+        @MockitoBean
+        private TodoService todoService;
 
-    private TodoItemDTO todoItemDTO;
-    private TodoItemDTO todoItemDTO2;
-    private List<TodoItemDTO> todoItemList;
+        private TodoItemDTO todoItemDTO;
+        private TodoItemDTO todoItemDTO2;
+        private List<TodoItemDTO> todoItemList;
 
-    @BeforeEach
-    void setUp() {
-        this.todoItemDTO = new TodoItemDTO(1L, "Test task", false, "Example");
-        this.todoItemDTO2 = new TodoItemDTO(2L, "Test task2", false, "Example");
+        @BeforeEach
+        void setUp() {
+                this.todoItemDTO = new TodoItemDTO(1L, "Test task", false, "Example");
+                this.todoItemDTO2 = new TodoItemDTO(2L, "Test task2", false, "Example");
 
-        this.todoItemList = List.of(this.todoItemDTO, this.todoItemDTO2);
+                this.todoItemList = List.of(this.todoItemDTO, this.todoItemDTO2);
 
-    }
+        }
 
-    @DisplayName("Test should return all tasks from project")
-    @Test
-    void shouldReturnAllTasksFromProjectList_IfProjectListsExists() throws Exception {
-        // Arrange
-        when(this.todoService.getAllTodosFromList(1L)).thenReturn(this.todoItemList);
+        @DisplayName("Test should return all tasks from project")
+        @Test
+        void shouldReturnAllTasksFromProjectList_IfProjectListsExists() throws Exception {
+                // Arrange
+                when(this.todoService.getAllTodosFromList(1L)).thenReturn(this.todoItemList);
 
-        // Act / Assert
-        this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].task").value(this.todoItemDTO.task()))
-                .andExpect(jsonPath("$[1].task").value(this.todoItemDTO2.task()));
+                // Act / Assert
+                this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.length()").value(2))
+                                .andExpect(jsonPath("$[0].task").value(this.todoItemDTO.task()))
+                                .andExpect(jsonPath("$[1].task").value(this.todoItemDTO2.task()));
 
-    }
+        }
 
-    @DisplayName("Test should return empty list when project has no task")
-    @Test
-    void shouldReturnEmptyList_IfProjectList_HasNoTasks() throws Exception {
-        // Arrange
-        when(this.todoService.getAllTodosFromList(1L)).thenReturn(List.of());
+        @DisplayName("Test should return empty list when project has no task")
+        @Test
+        void shouldReturnEmptyList_IfProjectList_HasNoTasks() throws Exception {
+                // Arrange
+                when(this.todoService.getAllTodosFromList(1L)).thenReturn(List.of());
 
-        // Act / Assert
-        this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                // Act / Assert
+                this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.length()").value(0));
 
-    }
+        }
 
-    @DisplayName("Test should return exception if project cannot be found")
-    @Test
-    void shouldReturnProjectNotFoundException_IfNotFound() throws Exception {
-        // Arrange
-        when(this.todoService.getAllTodosFromList(1L))
-                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+        @DisplayName("Test should return exception if project cannot be found")
+        @Test
+        void shouldReturnProjectNotFoundException_IfNotFound() throws Exception {
+                // Arrange
+                when(this.todoService.getAllTodosFromList(1L))
+                                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
 
-        // Act / Assert
-        this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
+                // Act / Assert
+                this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
+                                .andDo(print())
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
 
-    }
+        }
 
-    @DisplayName("Test should return todo that was added")
-    @Test
-    void shouldReturnAddedTodo_IfValidArgs() throws Exception {
-        // Arrange
-        TodoItem todo = new TodoItem("New Task");
-        when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
-                .thenReturn(new TodoItemDTO(1L, todo.getTask(), todo.isCompleted(), "Example"));
+        @DisplayName("Test should return todo that was added")
+        @Test
+        void shouldReturnAddedTodo_IfValidArgs() throws Exception {
+                // Arrange
+                TodoItem todo = new TodoItem("New Task");
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                                .thenReturn(new TodoItemDTO(1L, todo.getTask(), todo.isCompleted(), "Example"));
 
-        String requestBody = this.objectMapper.writeValueAsString(todo);
+                String requestBody = this.objectMapper.writeValueAsString(todo);
 
-        // Act / Assert
-        this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.task").value(todo.getTask()));
-    }
+                // Act / Assert
+                this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andDo(print())
+                                .andExpect(status().isCreated())
+                                .andExpect(jsonPath("$.task").value(todo.getTask()));
+        }
 
-    @DisplayName("Test should return exception if project to add todo is not found")
-    @Test
-    void shouldReturnProjectNotFoundException_IfListToAddTodo_IsNotFound() throws Exception {
-        // Arrange
-        TodoItem todo = new TodoItem("New Task");
-        when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
-                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
+        @DisplayName("Test should return exception if project to add todo is not found")
+        @Test
+        void shouldReturnProjectNotFoundException_IfListToAddTodo_IsNotFound() throws Exception {
+                // Arrange
+                TodoItem todo = new TodoItem("New Task");
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                                .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
 
-        String requestBody = this.objectMapper.writeValueAsString(todo);
+                String requestBody = this.objectMapper.writeValueAsString(todo);
 
-        // Act / Assert
-        this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
-    }
+                // Act / Assert
+                this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andDo(print())
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("Project with that id can not be found."));
+        }
 
-    @DisplayName("Test should return exception if invalid TodoItem argument")
-    @Test
-    void shouldReturnException_IfInvalidTodoItemArg() throws Exception {
-        // Arrange
-        TodoItem todo = new TodoItem("");
-        when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
-                .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
+        @DisplayName("Test should return exception if invalid TodoItem argument")
+        @Test
+        void shouldReturnException_IfInvalidTodoItemArg() throws Exception {
+                // Arrange
+                TodoItem todo = new TodoItem("");
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                                .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
 
-        String requestBody = this.objectMapper.writeValueAsString(todo);
+                String requestBody = this.objectMapper.writeValueAsString(todo);
 
-        // Act / Assert
-        this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Task cannot be blank or null"));
-    }
+                // Act / Assert
+                this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andDo(print())
+                                .andExpect(status().isBadRequest())
+                                .andExpect(jsonPath("$.message").value("Task cannot be blank or null"));
+        }
+
+        @DisplayName("Test should return exception if TodoItem is null")
+        @Test
+        void shouldReturnException_IfTodoItem_IsNull() throws Exception {
+                // Arrange
+
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                                .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
+
+                String requestBody = "{}";
+
+                // Act / Assert
+                this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andDo(print())
+                                .andExpect(status().isBadRequest())
+                                .andExpect(jsonPath("$.message").value("Task cannot be blank or null"));
+        }
 
 }
