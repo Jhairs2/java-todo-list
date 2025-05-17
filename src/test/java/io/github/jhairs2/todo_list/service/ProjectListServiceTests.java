@@ -115,6 +115,23 @@ public class ProjectListServiceTests {
 
         }
 
+        @DisplayName("Test should add and return Project")
+        @Test
+        void Create_WithValidArgs_ReturnCreatedProject() {
+                // Arrange
+                when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
+                when(this.projectListDTOMapper.convertProjectToDTO(projectList1)).thenReturn(this.projectList1DTO);
+
+                // Act
+                ProjectListDTO results = this.projectListService.createNewProjectList(this.projectList1);
+
+                // Assert
+                Assertions.assertThat(results)
+                                .isNotNull()
+                                .isEqualTo(this.projectList1DTO);
+
+        }
+
         @DisplayName("Test should return an updated ProjectList")
         @Test
         void Update_WithValidArgs_ReturnUpdatedProject() {
