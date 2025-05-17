@@ -130,6 +130,8 @@ public class ProjectListServiceTests {
                                 .isNotNull()
                                 .isEqualTo(this.projectList1DTO);
 
+                verify(this.projectListRepository).save(this.projectList1);
+
         }
 
         @DisplayName("Test should return an updated ProjectList")
