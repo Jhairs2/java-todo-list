@@ -59,7 +59,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return all ProjectLists")
         @Test
-        void shouldReturnAllProjectLists_IfListsExist() {
+        void Get_IfProjectsExist_ReturnAllProjects() {
 
                 when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
 
@@ -77,7 +77,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return an empty list")
         @Test
-        void shouldReturnEmptyList_IfNoListsExists() {
+        void Get_IfProjectsDoNotExist_ReturnEmptyList() {
                 when(this.projectListRepository.findAll()).thenReturn(List.of());
 
                 when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
@@ -92,7 +92,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return a single ProjectList that is requested")
         @Test
-        void shouldReturnSingleProjectList_ifListExists() {
+        void Get_WithValidId_ReturnSingleProject() {
 
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
@@ -106,7 +106,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
-        void shouldThrowException_IfListIsNotFound() {
+        void Get_WithInvalidId_ThrowException() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
@@ -117,7 +117,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return an updated ProjectList")
         @Test
-        void shouldReturnUpdatedProjectList_IfValidArgsPassed() {
+        void Update_WithValidArgs_ReturnUpdatedProject() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
 
                 this.projectList1.setListTitle(this.projectList2.getListTitle());
@@ -146,7 +146,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
-        void shouldThrowException_IfListToUpdateIsNotFound() {
+        void Update_WithInvalidId_ThrowException() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.updateProjectList(1L, this.projectList2))
@@ -157,7 +157,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return the deleted list")
         @Test
-        void shouldReturnDeletedProjectList_IfValidIdPassed() {
+        void Delete_WithValidId_ReturnDeletedProject() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
 
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
@@ -173,7 +173,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
-        void shouldThrowException_IfListToDeleteIsNotFound() {
+        void Delete_WithInvalidId_ThrowException() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.deleteProjectList(1L))
