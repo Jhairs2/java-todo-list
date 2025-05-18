@@ -59,7 +59,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return all available ProjectLists")
         @Test
-        void shouldReturnAllProjectLists_IfListsExist() throws Exception {
+        void Get_IfProjectsExist_ReturnAllProjects() throws Exception {
 
                 when(this.projectListService.getAllProjectLists()).thenReturn(this.projectDTOs);
 
@@ -72,7 +72,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return a empty list")
         @Test
-        void shouldReturnEmptyList_IfNoListsExists() throws Exception {
+        void Get_IfProjectsDoNotExist_ReturnEmptyList() throws Exception {
                 when(this.projectListService.getAllProjectLists()).thenReturn(List.of());
 
                 this.mockMvc.perform(get("/api/v1/projects"))
@@ -83,7 +83,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return a single ProjectList")
         @Test
-        void shouldReturnSingleProjectList_ifListExists() throws Exception {
+        void Get_WithValidProjectId_ReturnSingleProject() throws Exception {
                 when(this.projectListService.getProjectList(1L)).thenReturn(this.projectListDTO1);
 
                 this.mockMvc.perform(get("/api/v1/projects/1"))
@@ -94,7 +94,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return a ProjectListNotFoundException")
         @Test
-        void shouldThrowException_IfListIsNotFound() throws Exception {
+        void Get_WithInvalidProjectId_ThrowException() throws Exception {
                 when(this.projectListService.getProjectList(1L))
                                 .thenThrow(new ProjectListNotFoundException("Project with that id cannot be found"));
 
@@ -106,7 +106,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return the created projectList")
         @Test
-        void shouldReturnCreatedProjectList_IfValidArgs() throws Exception {
+        void Create_WithValidArgs_ReturnCreatedProject() throws Exception {
                 ProjectList newProjectList = new ProjectList("New List");
                 String requestBody = this.objectMapper.writeValueAsString(newProjectList);
 
@@ -124,7 +124,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return the updated project")
         @Test
-        void shouldReturnUpdatedProjectList_IfListExists() throws Exception {
+        void Update_WithValidArgs_ReturnUpdatedProject() throws Exception {
 
                 ProjectList newProject = new ProjectList("New Test");
                 newProject.setId(this.projectListDTO1.id());
@@ -145,9 +145,9 @@ public class ProjectListControllerTests {
 
         }
 
-        @DisplayName("Test should throw a ProjectNotFOundException if List to update is not found")
+        @DisplayName("Test should throw a ProjectNotFoundException if List to update is not found")
         @Test
-        void shouldThrowProjectNotFoundException_IfListToUpdateIsNotFound() throws Exception {
+        void Update_WithInvalidProjectId_ThrowException() throws Exception {
                 ProjectList emptyProjectList = new ProjectList();
 
                 when(this.projectListService.updateProjectList(eq(1L), any(ProjectList.class)))
@@ -163,7 +163,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should return deleted project")
         @Test
-        void shouldReturnDeletedProjectList_IfValidIdPassed() throws Exception {
+        void Delete_WithValidProjectId_ReturnDeletedProject() throws Exception {
 
                 when(this.projectListService.deleteProjectList(1L))
                                 .thenReturn(this.projectListDTO1);
@@ -178,7 +178,7 @@ public class ProjectListControllerTests {
 
         @DisplayName("Test should throw a ProjectNotFOundException if List to delete is not found")
         @Test
-        void shouldThrowProjectNotFoundException_IfListToDeleteIsNotFound() throws Exception {
+        void Delete_WithInvalidProjectId_ThrowException() throws Exception {
 
                 when(this.projectListService.deleteProjectList(1L))
                                 .thenThrow(new ProjectListNotFoundException("Project with that id does not exist"));

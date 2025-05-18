@@ -58,7 +58,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return all tasks from project")
         @Test
-        void shouldReturnAllTasksFromProjectList_IfProjectListsExists() throws Exception {
+        void Get_IfProjectAndTasksExist_ReturnAllTasks() throws Exception {
                 // Arrange
                 when(this.todoService.getAllTodosFromList(1L)).thenReturn(this.todoItemList);
 
@@ -74,7 +74,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return empty list when project has no task")
         @Test
-        void shouldReturnEmptyList_IfProjectList_HasNoTasks() throws Exception {
+        void Get_IfNoTasksExist_ReturnEmptyList() throws Exception {
                 // Arrange
                 when(this.todoService.getAllTodosFromList(1L)).thenReturn(List.of());
 
@@ -88,7 +88,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return exception if project cannot be found")
         @Test
-        void shouldReturnProjectNotFoundException_IfNotFound() throws Exception {
+        void Get_WithInvalidProjectId_ThrowException() throws Exception {
                 // Arrange
                 when(this.todoService.getAllTodosFromList(1L))
                                 .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
@@ -103,7 +103,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return todo that was added")
         @Test
-        void shouldReturnAddedTodo_IfValidArgs() throws Exception {
+        void Create_WithValidArgs_ReturnCreatedTodo() throws Exception {
                 // Arrange
                 TodoItem todo = new TodoItem("New Task");
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
@@ -122,7 +122,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return exception if project to add todo is not found")
         @Test
-        void shouldReturnProjectNotFoundException_IfListToAddTodo_IsNotFound() throws Exception {
+        void Create_WithInvalidProjectId_ThrowException() throws Exception {
                 // Arrange
                 TodoItem todo = new TodoItem("New Task");
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
@@ -141,7 +141,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return exception if invalid TodoItem argument")
         @Test
-        void shouldReturnException_IfInvalidTodoItemArg() throws Exception {
+        void Create_WithNoTitle_ThrowException() throws Exception {
                 // Arrange
                 TodoItem todo = new TodoItem("");
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
@@ -160,7 +160,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return exception if TodoItem is null")
         @Test
-        void shouldReturnException_IfTodoItem_IsNull() throws Exception {
+        void Create_WithNullTodoItem_ReturnException() throws Exception {
                 // Arrange
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
                                 .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
@@ -178,7 +178,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return updated TodoItem")
         @Test
-        void shouldReturnUpdatedTodoItem_IfValidArgs() throws Exception {
+        void Update_WithValidArgs_ReturnUpdatedTodo() throws Exception {
                 // Arrange
                 TodoItem updatedTodo = new TodoItem(this.todoItemDTO.task());
                 when(this.todoService.updateTodoById(eq(1L), any(TodoItem.class)))
@@ -197,7 +197,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return exception when todo to update cannot be found")
         @Test
-        void shouldReturntTodoItemNotFoundException_IfTodoItem_NotFound() throws Exception {
+        void Update_WithInvalidTodoId_ThrowException() throws Exception {
                 // Arrange
                 TodoItem updatedTodo = new TodoItem(this.todoItemDTO.task());
                 when(this.todoService.updateTodoById(eq(1L), any(TodoItem.class)))
@@ -216,7 +216,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return deleted TodoItem")
         @Test
-        void shouldReturnDeletedTodoItem_IfValidArgs() throws Exception {
+        void Delete_WithValidTodoId_ReturnDeletedTodo() throws Exception {
                 // Arrange
                 when(this.todoService.deleteTodoFromList(1L)).thenReturn(this.todoItemDTO);
 
@@ -231,7 +231,7 @@ public class TodoItemControllerTests {
 
         @DisplayName("Test should return exception when todo to delete cannot be found")
         @Test
-        void shouldReturntTodoItemNotFoundException_IfTodoItemToDelete_NotFound() throws Exception {
+        void Delete_WithInvalidTodoId_ThrowException() throws Exception {
 
                 // Arrange
                 when(this.todoService.deleteTodoFromList(1L))
