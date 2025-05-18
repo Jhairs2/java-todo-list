@@ -58,7 +58,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return all tasks of the project")
         @Test
-        void shouldReturnAllTasksFromProjectList_IfProjectListsExists() {
+        void Get_IfProjectAndTasksExist_ReturnAllTasks() {
                 // Arrange
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
                 when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
@@ -77,7 +77,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return an empty list if project has no tasks")
         @Test
-        void shouldReturnEmptyList_IfProjectListsExistsButNoTasks() {
+        void Get_IfNoTasksExist_ReturnEmptyList() {
 
                 // Arrange
                 List<TodoItemDTO> emptyList = List.of();
@@ -97,7 +97,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return a ProjectNotFoundException if project is not found")
         @Test
-        void shouldReturnProjectNotFoundException_IfListsDoesNotExist() {
+        void Get_WithInvalidProjectId_ThrowException() {
 
                 // Arrange
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
@@ -111,7 +111,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return the added todoItem")
         @Test
-        void shouldReturnAddedTodoItem_IfValidArgs() {
+        void Create_WithValidArgs_ReturnCreatedTodo() {
 
                 // Arrange
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
@@ -131,7 +131,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return an exception if todo has empty title")
         @Test
-        void shouldReturnException_WhenNoTitle() {
+        void Create_WithNoTitle_ThrowException() {
                 // Arrange
                 TodoItem newTask = new TodoItem("");
 
@@ -143,7 +143,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return an exception if todo is Null")
         @Test
-        void shouldReturnException_WhenNullTodo() {
+        void Create_WithNullTodoItem_ReturnException() {
                 // Arrange
                 TodoItem newTask = null;
 
@@ -155,7 +155,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return an exception if project cannot be found")
         @Test
-        void shouldReturnProjectNotFoundException_IfListToAddTask_DoesNotExist() {
+        void Create_WithInvalidProjectId_ThrowException() {
                 // Arrange
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -167,7 +167,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return updated todo")
         @Test
-        void shouldReturnUpdatedTodoItem_IfValidArgs() {
+        void Update_WithValidArgs_ReturnUpdatedTodo() {
                 // Arrange
                 TodoItem updatedTask = new TodoItem("Updated Task");
                 when(this.todoRepository.findById(1L)).thenReturn(Optional.of(this.todoItem));
@@ -195,7 +195,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return exception if Todo to update is not found")
         @Test
-        void shouldReturnTodoItemNotFoundException_IfTodoToUpdate_DoesNotExist() {
+        void Update_WithInvalidTodoId_ThrowException() {
                 // Arrange
                 when(this.todoRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -206,7 +206,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return deleted Todo")
         @Test
-        void shouldReturnDeletedTodo_IfTodoExists() {
+        void Delete_WithValidTodoId_ReturnDeletedTodo() {
                 // Arrange
                 when(this.todoRepository.findById(1L)).thenReturn(Optional.of(this.todoItem));
                 when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
@@ -224,7 +224,7 @@ public class TodoServiceTests {
 
         @DisplayName("Test should return exception if Todo to delete is not found")
         @Test
-        void shouldReturnTodoItemNotFoundException_IfTodoToDelete_DoesNotExist() {
+        void Delete_WithInvalidTodoId_ThrowException() {
                 // Arrange
                 when(this.todoRepository.findById(1L)).thenReturn(Optional.empty());
 

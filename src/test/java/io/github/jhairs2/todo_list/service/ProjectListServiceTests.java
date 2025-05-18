@@ -92,7 +92,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return a single ProjectList that is requested")
         @Test
-        void Get_WithValidId_ReturnSingleProject() {
+        void Get_WithValidProjectId_ReturnSingleProject() {
 
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
@@ -106,7 +106,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
-        void Get_WithInvalidId_ThrowException() {
+        void Get_WithInvalidProjectId_ThrowException() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
@@ -165,7 +165,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
-        void Update_WithInvalidId_ThrowException() {
+        void Update_WithInvalidProjectId_ThrowException() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.updateProjectList(1L, this.projectList2))
@@ -176,7 +176,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should return the deleted list")
         @Test
-        void Delete_WithValidId_ReturnDeletedProject() {
+        void Delete_WithValidProjectId_ReturnDeletedProject() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
 
                 when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
@@ -192,7 +192,7 @@ public class ProjectListServiceTests {
 
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
-        void Delete_WithInvalidId_ThrowException() {
+        void Delete_WithInvalidProjectId_ThrowException() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.deleteProjectList(1L))
