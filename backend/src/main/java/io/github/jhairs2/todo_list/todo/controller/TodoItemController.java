@@ -31,7 +31,6 @@ public class TodoItemController {
     @GetMapping
     public List<TodoItemDTO> getAllTodosFromList(@PathVariable("projectId") Long id) {
         return this.todoService.getAllTodosFromList(id);
-
     }
 
     @PostMapping
