@@ -31,8 +31,7 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
-
+/backend/.vscode/
 
 ### Build Files ###
 src/main/resources/application.properties
