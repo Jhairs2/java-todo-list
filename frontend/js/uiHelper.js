@@ -1,12 +1,14 @@
-export const domUtility = () => {
+export const uiHelper = () => {
   const contentPage = document.getElementById("project-content");
 
-  const createTodoItemCard = () => {
-    const div = document.createElement("div");
+  const createTodoItemCard = (todoItem) => {
+    const todoContainer = document.createElement("div");
     const task = document.createElement("div");
     const completed = document.createElement("div");
 
-    div.classList.add(
+    todoContainer.dataset.id = todoItem.id();
+
+    todoContainer.classList.add(
       "row",
       "p-3",
       "mb-2",
@@ -15,12 +17,14 @@ export const domUtility = () => {
       "rounded",
       "todo-container"
     );
+
     task.classList.add("col", "todo-title");
+
     completed.classList.add("col", "todo-completed");
 
-    div.append(task, completed);
+    todoContainer.append(task, completed);
 
-    return div;
+    return todoContainer;
   };
 
   const addContentToPage = (content) => {

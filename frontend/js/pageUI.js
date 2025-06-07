@@ -1,4 +1,4 @@
-import { getProjects, getTasks } from "./api.js";
+import { apiCalls } from "./apiCalls.js";
 import { uiHelper } from "./uiHelper.js";
 
 const select = document.querySelector("#project-select");
