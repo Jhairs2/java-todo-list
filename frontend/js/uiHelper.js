@@ -1,7 +1,8 @@
-import dataHelper from "./dataHelper";
+import dataHelper from "./dataHelper.js";
 
 export const uiHelper = () => {
   const contentPage = document.getElementById("project-content");
+  const select = document.querySelector("#project-select");
 
   const createTodoItemCard = (todoItem) => {
     const todoContainer = document.createElement("div");
@@ -30,8 +31,7 @@ export const uiHelper = () => {
   };
 
   const fillSelectMenuWithProjects = async () => {
-    const projectData = dataHelper().convertProjectDataToArray();
-    const select = document.querySelector("#project-select");
+    const projectData = await dataHelper().convertProjectDataToArray();
 
     projectData.forEach((project) => {
       let option = document.createElement("option");
@@ -58,5 +58,5 @@ export const uiHelper = () => {
     contentPage.append(elements);
   };
 
-  return { createTodoItemCard, addContentToPage };
+  return { createTodoItemCard, addContentToPage, fillSelectMenuWithProjects };
 };
