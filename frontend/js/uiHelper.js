@@ -1,3 +1,5 @@
+import dataHelper from "./dataHelper";
+
 export const uiHelper = () => {
   const contentPage = document.getElementById("project-content");
 
@@ -25,6 +27,19 @@ export const uiHelper = () => {
     todoContainer.append(task, completed);
 
     return todoContainer;
+  };
+
+  const fillSelectMenuWithProjects = async () => {
+    const projectData = dataHelper().convertProjectDataToArray();
+    const select = document.querySelector("#project-select");
+
+    projectData.forEach((project) => {
+      let option = document.createElement("option");
+      option.text = project.listTitle;
+      option.value = project.id;
+
+      select.add(option);
+    });
   };
 
   const addContentToPage = (content) => {
