@@ -1,4 +1,4 @@
-import { apiCalls } from "./apiCalls";
+import { apiCalls } from "./apiCalls.js";
 
 const dataHelper = () => {
   const convertProjectDataToArray = async () => {
