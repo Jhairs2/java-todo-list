@@ -1,8 +1,23 @@
 import { uiHelper } from "./uiHelper.js";
-const select = document.querySelector("#project-select");
-uiHelper().fillSelectMenuWithProjects();
+import { apiCalls } from "./apiCalls.js";
+import dataHelper from "./dataHelper.js";
+import eventListeners from "./events.js";
 
-select.addEventListener("change", () => {
-  const data = getTasks(select.value);
-  console.log(data);
-});
+const initSelectMenu = async () => {
+  try {
+    const data = await apiCalls().getProjects();
+    const projects = dataHelper().convertToArray(data);
+    uiHelper().addOptionsToSelectMenu(projects);
+  } catch (error) {
+    console.error(error);
+    uiHelper().showError(error);
+  }
+};
+
+const loadTasks = () => {
+  eventListeners().showTasksOfSelectedProject();
+  eventListeners().deleteButtonListener();
+};
+
+initSelectMenu();
+loadTasks();

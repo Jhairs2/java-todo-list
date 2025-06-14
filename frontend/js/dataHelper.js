@@ -1,19 +1,12 @@
-import { apiCalls } from "./apiCalls.js";
-
 const dataHelper = () => {
-  const convertProjectDataToArray = async () => {
-    const projectData = await apiCalls().getProjects();
-
-    return Object.values(projectData);
+  const convertToArray = (data) => {
+    if (!data || typeof data != "object") {
+      throw new Error("Data was not returned from server");
+    }
+    return Object.values(data);
   };
 
-  const convertTaskDataToArray = async (projectId) => {
-    const taskData = await apiCalls().getTasks(projectId);
-
-    return Object.values(taskData);
-  };
-
-  return { convertProjectDataToArray, convertTaskDataToArray };
+  return { convertToArray };
 };
 
 export default dataHelper;

@@ -6,10 +6,13 @@ export const uiHelper = () => {
 
   const createTodoItemCard = (todoItem) => {
     const todoContainer = document.createElement("div");
-    const task = document.createElement("div");
-    const completed = document.createElement("div");
+    const taskContainer = document.createElement("div");
+    const optionsContainer = document.createElement("div");
+    const task = document.createElement("p");
+    const completed = document.createElement("input");
+    const deleteButton = document.createElement("button");
 
-    todoContainer.dataset.id = todoItem.id();
+    todoContainer.dataset.id = todoItem.id;
 
     todoContainer.classList.add(
       "row",
@@ -21,32 +24,29 @@ export const uiHelper = () => {
       "todo-container"
     );
 
-    task.classList.add("col", "todo-title");
+    taskContainer.classList.add("col", "task-container");
+    task.textContent = todoItem.task;
+    taskContainer.append(task);
 
-    completed.classList.add("col", "todo-completed");
+    optionsContainer.classList.add("col", "options-container");
+    completed.type = "checkbox";
+    completed.checked = todoItem.completed;
 
-    todoContainer.append(task, completed);
+    deleteButton.classList.add("btn", "btn-outline-danger");
+    deleteButton.dataset.deleteId = todoItem.id;
+    deleteButton.textContent = "X";
+
+    optionsContainer.append(completed, deleteButton);
+
+    todoContainer.append(taskContainer, optionsContainer);
 
     return todoContainer;
   };
 
-  const fillSelectMenuWithProjects = async () => {
-    const projectData = await dataHelper().convertProjectDataToArray();
-
-    projectData.forEach((project) => {
-      let option = document.createElement("option");
-      option.text = project.listTitle;
-      option.value = project.id;
-
-      select.add(option);
-    });
-  };
-
   const addContentToPage = (content) => {
     if (!Array.isArray(content)) {
-      throw new TypeError(
-        "Error expecting Array as argument type not: " + typeof content
-      );
+      console.error("Expecting array as argument");
+      return;
     }
 
     const elements = document.createDocumentFragment();
@@ -58,5 +58,55 @@ export const uiHelper = () => {
     contentPage.append(elements);
   };
 
-  return { createTodoItemCard, addContentToPage, fillSelectMenuWithProjects };
+  const removeTask = (id) => {
+    const todoItem = document.querySelector(`[data-id="${id}"]`);
+    console.log(todoItem);
+    todoItem.remove();
+  };
+
+  const clearContentSection = () => {
+    const content = document.querySelector("#project-content");
+    content.replaceChildren();
+  };
+
+  const showError = (message) => {
+    clearContentSection();
+    const span = document.createElement("span");
+    span.textContent = message;
+    addContentToPage([span]);
+  };
+
+  const addOptionsToSelectMenu = (data) => {
+    if (data.length == 0 || !Array.isArray(data)) {
+      showError("No projects available");
+    } else {
+      data.forEach((project) => {
+        const option = document.createElement("option");
+        option.text = project.listTitle;
+        option.value = project.id;
+        select.add(option);
+      });
+    }
+  };
+
+  const showTasks = (data) => {
+    if (data.length == 0 || !Array.isArray(data)) {
+      showError("No tasks available");
+    } else {
+      data.forEach((task) => {
+        const content = createTodoItemCard(task);
+        addContentToPage([content]);
+      });
+    }
+  };
+
+  return {
+    createTodoItemCard,
+    addContentToPage,
+    addOptionsToSelectMenu,
+    clearContentSection,
+    showError,
+    showTasks,
+    removeTask,
+  };
 };
