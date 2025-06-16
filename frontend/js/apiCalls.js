@@ -62,7 +62,7 @@ export const apiCalls = () => {
         data.error?.message || "Unknown error"
       );
     } catch (error) {
-      errorHandler(error, "Could not connect to server");
+      errorHandler(error, "Something has gone wrong");
     }
   };
 
@@ -88,7 +88,7 @@ export const apiCalls = () => {
         data.error?.message || "Unknown error"
       );
     } catch (error) {
-      errorHandler(error, "Could not connect to server");
+      errorHandler(error, "Something has gone wrong");
     }
   };
 
@@ -118,7 +118,7 @@ export const apiCalls = () => {
         data.error?.message || "Unknown error"
       );
     } catch (error) {
-      errorHandler(error, "Could not connect to server");
+      errorHandler(error, "Something has gone wrong");
     }
   };
 
@@ -149,7 +149,7 @@ export const apiCalls = () => {
         data.error?.message || "Unknown error"
       );
     } catch (error) {
-      errorHandler(error, "Could not connect to server");
+      errorHandler(error, "Something has gone wrong");
     }
   };
 
@@ -168,7 +168,7 @@ export const apiCalls = () => {
       if (response.ok) {
         console.log(
           "Success! Todo",
-          todoId,
+          taskId,
           `deleted from project ${projectId}`
         );
         return data;
@@ -178,7 +178,7 @@ export const apiCalls = () => {
         data.error?.message || "Unknown error"
       );
     } catch (error) {
-      errorHandler(error, "Could not connect to server");
+      errorHandler(error, "Something has gone wrong");
     }
   };
 
