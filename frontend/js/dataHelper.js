@@ -1,8 +1,9 @@
 const dataHelper = () => {
   const convertToArray = (data) => {
     if (!data || typeof data != "object") {
-      throw new Error("Data was not returned from server");
+      throw new Error("Something went wrong! Retry request");
     }
+
     return Object.values(data);
   };
 
