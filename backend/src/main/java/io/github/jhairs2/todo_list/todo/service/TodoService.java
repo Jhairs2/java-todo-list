@@ -58,8 +58,12 @@ public class TodoService {
         TodoItem oldTask = this.todoRepository.findById(id)
                 .orElseThrow(() -> new TodoItemNotFoundException("Task with that id does not exist."));
 
-        oldTask.setTask(updatedTask.getTask());
-        oldTask.setCompleted(updatedTask.isCompleted());
+        if (updatedTask.getTask() == null) {
+            oldTask.setCompleted(updatedTask.isCompleted());
+        } else {
+            oldTask.setTask(updatedTask.getTask());
+            oldTask.setCompleted(updatedTask.isCompleted());
+        }
 
         return this.todoItemDTOMapper.convertTodoItemToDTO(this.todoRepository.save(oldTask));
 
