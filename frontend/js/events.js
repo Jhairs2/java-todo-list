@@ -154,9 +154,6 @@ const eventListeners = () => {
   const displayTasks = async (projectId) => {
     const tasksArr = await api.getTasks(projectId);
     ui.displayTasks(tasksArr);
-    if (tasksArr.length > 0) {
-      handleTaskContainerEvents();
-    }
   };
 
   // Delete task from project and remove task container
@@ -207,6 +204,7 @@ const eventListeners = () => {
   const handlePageListeners = () => {
     handleAddTaskSection();
     handleAddTaskFormSubmit();
+    handleTaskContainerEvents();
     hideEditForm();
   };
 
