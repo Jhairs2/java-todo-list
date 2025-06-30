@@ -59,7 +59,7 @@ const eventListeners = () => {
         getCurrentProjectId()
       );
       ui.hideAddTaskForm();
-      displayTasks(getCurrentProjectId());
+      await displayTasks(getCurrentProjectId());
       console.log(addedTask);
     } catch (error) {
       handleError(error);
@@ -111,7 +111,7 @@ const eventListeners = () => {
       e.preventDefault();
 
       if (e.target.classList.contains("edit-form")) {
-        await handleEditFormSubit(
+        await handleEditFormSubmit(
           e.target,
           e.target.closest(".todo-container")
         );
@@ -120,7 +120,7 @@ const eventListeners = () => {
   };
 
   // Handle logic for edit form submit
-  const handleEditFormSubit = async (form, taskContainer) => {
+  const handleEditFormSubmit = async (form, taskContainer) => {
     try {
       const editedTask = await formHand.submitTaskForm(
         "PUT",
@@ -150,7 +150,6 @@ const eventListeners = () => {
   };
 
   /* Helper functions */
-
   // Display tasks to screen
   const displayTasks = async (projectId) => {
     const tasksArr = await api.getTasks(projectId);
@@ -191,6 +190,7 @@ const eventListeners = () => {
       }
     });
   };
+
   // Handle errors and display error on page and coonsole
   const handleError = (error) => {
     console.error(error);
