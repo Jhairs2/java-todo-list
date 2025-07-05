@@ -1,21 +1,21 @@
-import { uiHelper } from "./uiHelper.js";
+import { uiBuilder, elementsLookUp } from "./uiHelper.js";
 import { apiCalls } from "./apiCalls.js";
 import formHandler from "./forms.js";
 
 const eventListeners = () => {
-  const ui = uiHelper();
+  const ui = uiBuilder();
   const api = apiCalls();
+  const lookup = elementsLookUp();
   const formHand = formHandler();
-  const contentSection = ui.getElement("#project-content-container");
-  const addTaskSection = ui.getElement(".add-task-section");
-  const addTaskFormContainer = ui.getElement("#form-add-container");
-  const select = ui.getElement("#project-select");
+  const contentSection = lookup.query("#project-content-container");
+  const addTaskSection = lookup.query(".add-task-section");
+  const addTaskFormContainer = lookup.query("#form-add-container");
+  const select = lookup.query("#project-select");
 
   /* Handle select menu events */
   // Show tasks of projects when selected
-  const showTasksOfSelectedProject = () => {
+  const handleSelectMenu = () => {
     select.addEventListener("change", async () => {
-      ui.clearTaskContainers();
       try {
         await displayTasks(select.value);
       } catch (error) {
@@ -29,7 +29,7 @@ const eventListeners = () => {
   const handleAddTaskSection = () => {
     addTaskSection.addEventListener("click", (e) => {
       if (e.target.matches("#add-task-btn")) {
-        ui.showAddTaskForm();
+        ui.displayAddTaskForm();
       }
     });
 
@@ -91,6 +91,7 @@ const eventListeners = () => {
         { completed: checkbox.checked }
       );
       console.log(updatedTask);
+      ui.toggleClass(taskContainer, "completed");
     } catch (error) {
       handleError(error);
     }
@@ -100,9 +101,9 @@ const eventListeners = () => {
   const handleEditBtns = (taskContainer) => {
     const activeEdit = getActiveEdit();
     if (activeEdit && activeEdit != taskContainer) {
-      activeEdit.classList.toggle("editing");
+      ui.toggleClass(activeEdit, "editing");
     }
-    taskContainer.classList.toggle("editing");
+    ui.toggleClass(taskContainer, "editing");
   };
 
   // Add submit event listener for submit button in task container
@@ -129,7 +130,7 @@ const eventListeners = () => {
         taskContainer.dataset.id
       );
       updateTaskTitle(editedTask.task);
-      taskContainer.classList.toggle("editing");
+      ui.toggleClass(taskContainer, "editing");
       console.log(editedTask);
     } catch (error) {
       handleError(error);
@@ -166,7 +167,7 @@ const eventListeners = () => {
 
   // Update task in task container with new task
   const updateTaskTitle = (newTask) => {
-    const editedTask = ui.getElement(".editing .task-section .task-title");
+    const editedTask = lookup.query(".editing .task-section .task-title");
     editedTask.textContent = newTask;
   };
 
@@ -175,7 +176,7 @@ const eventListeners = () => {
     document.addEventListener("click", (e) => {
       const activeEdit = getActiveEdit();
       if (activeEdit && !activeEdit.contains(e.target)) {
-        const editForm = getElementFromContainer(
+        const editForm = queryFromContainer(
           activeEdit,
           ".task-section .edit-form"
         );
@@ -183,7 +184,7 @@ const eventListeners = () => {
           editForm.reset();
         }
 
-        activeEdit.classList.toggle("editing");
+        ui.toggleClass(activeEdit, "editing");
       }
     });
   };
@@ -209,13 +210,13 @@ const eventListeners = () => {
   };
 
   // Get element from task container
-  const getElementFromContainer = (taskContainer, selector) => {
-    return ui.getElement(selector, taskContainer);
+  const queryFromContainer = (taskContainer, selector) => {
+    return lookup.query(selector, taskContainer);
   };
 
   // Get active ediit
   const getActiveEdit = () => {
-    return ui.getElement(".editing");
+    return lookup.query(".editing");
   };
 
   // Get current select project from select menu
@@ -225,8 +226,9 @@ const eventListeners = () => {
   };
 
   return {
-    showTasksOfSelectedProject,
+    handleSelectMenu,
     handlePageListeners,
+    displayTasks,
   };
 };
 
