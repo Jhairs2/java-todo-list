@@ -1,3 +1,23 @@
-.form-container  {
-    visibility: none;
+.hide  {
+    display: none;
+
 }
+
+.task-section form {
+    display: none;
+}
+
+.editing .task-section p  {
+    display: none;
+}
+
+
+.editing .task-section form{
+    display: block;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+
