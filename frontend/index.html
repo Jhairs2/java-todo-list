@@ -16,8 +16,8 @@
 </head>
 
 <body>
-  <header class="container-fluid" id="header-section">
-    <section class="container-md d-flex flex-wrap mt-4 justify-content-center" id="project-select-container">
+  <header class="container-md" id="header-section">
+    <section class="d-flex flex-wrap mt-4 justify-content-center" id="project-select-container">
       <label for="project-select">Project Menu:</label>
       <select class="form-select form-select-lg mb-3" id="project-select">
         <option disabled selected hidden>Open this select menu</option>
@@ -32,7 +32,7 @@
       </button>
     </section>
 
-    <section class="container-md hide" id="add-task-form-section">
+    <section class="hide" id="add-task-form-section">
       <form class="d-flex flex-wrap" id="add-task-form">
         <label class="visually-hidden" for="add-task-input">Task</label>
         <input class="form-control mb-2 me-2" id="add-task-input" name="add-task" type="text" placeholder="Wash clothes"
@@ -47,9 +47,9 @@
         </div>
       </form>
     </section>
-    <section class="container-md hide" id="add-project-form-section">
+    <section class="hide" id="add-project-form-section">
       <form class="d-flex flex-wrap" id="add-project-form">
-        <label class="visually-hidden" for="add-project-input">Task</label>
+        <label class="visually-hidden" for="add-project-input">Project</label>
         <input class="form-control mb-2 me-2" id="add-project-input" name="add-project" type="text"
           placeholder="Project title..." maxlength="70" minlength="1" required />
         <div class="add-project-form-btns-container">
@@ -65,7 +65,7 @@
   </header>
 
   <main class="container-md mt-3" id="project-content">
-    <section class="container" id="project-details-section">
+    <section id="project-details-section">
       <div id="project-details">
         <h3 id="project-title">Example</h3>
         <button id="edit-project-btn" type="button">
@@ -92,7 +92,7 @@
       </div>
     </section>
 
-    <section class="container-fluid rounded" id="todo-content-container"></section>
+    <section class="rounded" id="todo-content-container"></section>
   </main>
 </body>
 
