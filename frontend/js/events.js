@@ -1,234 +1,230 @@
-import { uiBuilder, elementsLookUp } from "./uiHelper.js";
+import { uiFunctions } from "./uiFunctions.js";
 import { apiCalls } from "./apiCalls.js";
+import { query, queryAll } from "./utilityFunctions.js";
 import formHandler from "./forms.js";
 
 const eventListeners = () => {
-  const ui = uiBuilder();
+  // Initialize imports
   const api = apiCalls();
-  const lookup = elementsLookUp();
-  const formHand = formHandler();
-  const contentSection = lookup.query("#project-content-container");
-  const addTaskSection = lookup.query(".add-task-section");
-  const addTaskFormContainer = lookup.query("#form-add-container");
-  const select = lookup.query("#project-select");
+  const ui = uiFunctions();
+  const forms = formHandler();
 
-  /* Handle select menu events */
-  // Show tasks of projects when selected
-  const handleSelectMenu = () => {
-    select.addEventListener("change", async () => {
-      try {
-        await displayTasks(select.value);
-      } catch (error) {
-        handleError(error);
-      }
-    });
+  // SELECT MENU
+
+  // Add event listener to select menu for changing selections
+  const handleSelectMenuEvents = () => {
+    const selectMenu = query(".project-select");
+    selectMenu.addEventListener("change", handleSelectMenuChanges);
   };
 
-  /* Handle add task form events */
-  // Add click event listner to divs that contains buttons to show and hide task form
-  const handleAddTaskSection = () => {
-    addTaskSection.addEventListener("click", (e) => {
-      if (e.target.matches("#add-task-btn")) {
-        ui.displayAddTaskForm();
-      }
-    });
-
-    addTaskFormContainer.addEventListener("click", (e) => {
-      if (e.target.matches("#cancel-add-btn")) {
-        ui.hideAddTaskForm();
-      }
-    });
-  };
-
-  // Add submit listener to div that contains task form
-  const handleAddTaskFormSubmit = () => {
-    addTaskFormContainer.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (e.target.matches("#add-task-form")) {
-        await handleAddTaskForm(e.target);
-      }
-    });
-  };
-
-  // handle logic for task form submit
-  const handleAddTaskForm = async (form) => {
+  // handle select menu change,, projects tasks will display whenever option is selected
+  const handleSelectMenuChanges = async (e) => {
     try {
-      const addedTask = await formHand.submitTaskForm(
-        "POST",
-        form,
-        getCurrentProjectId()
-      );
-      ui.hideAddTaskForm();
-      await displayTasks(getCurrentProjectId());
-      console.log(addedTask);
+      const tasks = await api.getTasks(e.target.value);
+      ui.displayTasks(tasks);
     } catch (error) {
-      handleError(error);
-      ui.hideAddTaskForm();
+      ui.displayError(error);
     }
   };
 
-  /* Handle task container events */
-  // Add click event listener to task container
-  const handleTaskContainerClickEvents = () => {
-    contentSection.addEventListener("click", async (e) => {
-      if (e.target.classList.contains("edit-btn")) {
-        handleEditBtns(e.target.closest(".todo-container"));
-      } else if (e.target.classList.contains("delete-btn")) {
-        await handleDeleteBtns(e.target.closest(".todo-container"));
-      } else if (e.target.classList.contains("complete-task-box")) {
-        console.log("im running");
-        await handleCheckboxes(e.target.closest(".todo-container"), e.target);
-      }
-    });
+  // MAIN SECTION
+
+  // handle evenets for the main section
+  const handleMainSectionEvents = () => {
+    const mainSection = query("#main-section");
+    mainSection.addEventListener("click", handleMainSectionClickEvents);
+    mainSection.addEventListener("submit", handleMainSectionSubmitEvents);
+    mainSection.addEventListener("invalid", inputValidation, true);
+    mainSection.addEventListener("focusout", noFocusToggleEdit);
   };
 
-  // Handle logic for task container checkbox
-  const handleCheckboxes = async (taskContainer, checkbox) => {
-    try {
-      const updatedTask = await api.updateTask(
-        getCurrentProjectId(),
-        taskContainer.dataset.id,
-        { completed: checkbox.checked }
-      );
-      console.log(updatedTask);
-      ui.toggleClass(taskContainer, "completed");
-    } catch (error) {
-      handleError(error);
+  // Main section click events
+  const handleMainSectionClickEvents = async (e) => {
+    if (!e.target || !e.target.dataset.action) {
+      return;
     }
-  };
+    const projectId = parseInt(query(".project-select").value);
+    const projectContainer = query(".project-select-container");
+    const taskContainer = e.target.closest(".task-container");
+    let { action } = e.target.dataset;
+    action = action.toLowerCase().trim();
 
-  // Handle logic for task container edit button
-  const handleEditBtns = (taskContainer) => {
-    const activeEdit = getActiveEdit();
-    if (activeEdit && activeEdit != taskContainer) {
-      ui.toggleClass(activeEdit, "editing");
+    if (action !== "add-project" && !ui.isProjectSelected()) {
+      return;
     }
-    ui.toggleClass(taskContainer, "editing");
-  };
 
-  // Add submit event listener for submit button in task container
-  const handleTaskContainerFormSubmits = () => {
-    contentSection.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    switch (action) {
+      case "add-project":
+        ui.toggleProjectAdd(projectContainer);
+        break;
 
-      if (e.target.classList.contains("edit-form")) {
-        await handleEditFormSubmit(
-          e.target,
-          e.target.closest(".todo-container")
-        );
-      }
-    });
-  };
+      case "edit-task":
+        ui.toggleEditMode(taskContainer, "task");
+        break;
 
-  // Handle logic for edit form submit
-  const handleEditFormSubmit = async (form, taskContainer) => {
-    try {
-      const editedTask = await formHand.submitTaskForm(
-        "PUT",
-        form,
-        getCurrentProjectId(),
-        taskContainer.dataset.id
-      );
-      updateTaskTitle(editedTask.task);
-      ui.toggleClass(taskContainer, "editing");
-      console.log(editedTask);
-    } catch (error) {
-      handleError(error);
-    }
-  };
+      case "edit-project":
+        ui.toggleEditMode(projectContainer, "project");
+        break;
 
-  // Handle logic for task container delete button
-  const handleDeleteBtns = async (taskContainer) => {
-    try {
-      const deletedTask = await deleteTask(
-        getCurrentProjectId(),
-        taskContainer.dataset.id
-      );
-      console.log(deletedTask);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  /* Helper functions */
-  // Display tasks to screen
-  const displayTasks = async (projectId) => {
-    const tasksArr = await api.getTasks(projectId);
-    ui.displayTasks(tasksArr);
-  };
-
-  // Delete task from project and remove task container
-  const deleteTask = async (projectId, taskId) => {
-    const deletedTask = await api.deleteTask(projectId, taskId);
-    ui.removeTaskContainer(taskId);
-
-    return deletedTask;
-  };
-
-  // Update task in task container with new task
-  const updateTaskTitle = (newTask) => {
-    const editedTask = lookup.query(".editing .task-section .task-title");
-    editedTask.textContent = newTask;
-  };
-
-  // Add event listener to page to close active edit when clicking elsewhere
-  const hideEditForm = () => {
-    document.addEventListener("click", (e) => {
-      const activeEdit = getActiveEdit();
-      if (activeEdit && !activeEdit.contains(e.target)) {
-        const editForm = queryFromContainer(
-          activeEdit,
-          ".task-section .edit-form"
-        );
-        if (editForm) {
-          editForm.reset();
+      case "delete-task":
+        try {
+          await api.deleteTask(projectId, taskContainer.dataset.id);
+          ui.removeTaskContainer(taskContainer);
+          checkForContent("task");
+        } catch (error) {
+          ui.displayError(error);
         }
+        break;
 
-        ui.toggleClass(activeEdit, "editing");
+      case "delete-project":
+        try {
+          await api.deleteProject(projectId);
+          ui.removeSelectedProjectFromMenu();
+          checkForContent("project");
+        } catch (error) {
+          ui.displayError(error);
+        }
+        break;
+
+      case "complete":
+        try {
+          await api.updateTask(projectId, taskContainer.dataset.id, {
+            completed: e.target.checked,
+          });
+          ui.toggleCompleted(e.target, taskContainer);
+        } catch (error) {
+          ui.displayError(error);
+        }
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  // Main section form submission events
+  const handleMainSectionSubmitEvents = async (e) => {
+    e.preventDefault();
+    if (!e.target || !e.target.dataset.action) {
+      return;
+    }
+
+    const projectContainer = query(".project-select-container");
+    const projectId = parseInt(query(".project-select").value);
+    const taskContainer = e.target.closest(".task-container");
+
+    let { action } = e.target.dataset;
+    action = action.toLowerCase().trim();
+
+    if (action !== "new-project" && !ui.isProjectSelected()) {
+      return;
+    }
+
+    switch (action) {
+      case "edit-task":
+        try {
+          const editedTask = await forms.editTaskSubmit(
+            e.target,
+            projectId,
+            taskContainer.dataset.id
+          );
+          taskContainer.classList.remove("editing");
+          ui.updateTaskTitle(taskContainer, editedTask.task);
+        } catch (error) {
+          ui.displayError(error);
+        }
+        break;
+
+      case "edit-project":
+        try {
+          const editedProject = await forms.editProjectSubmit(
+            e.target,
+            projectId
+          );
+          projectContainer.classList.remove("editing");
+          ui.updateProjectTitle(editedProject.listTitle);
+        } catch (error) {
+          ui.displayError(error);
+        }
+        break;
+
+      case "new-task":
+        try {
+          const addedTask = await forms.addTaskSubmit(e.target, projectId);
+          ui.addTaskContainer(addedTask);
+        } catch (error) {
+          ui.displayError(error);
+        }
+        break;
+
+      case "new-project":
+        try {
+          const addedProject = await forms.addProjectSubmit(e.target);
+          projectContainer.classList.remove("adding");
+          ui.addOptionToSelectMenu(addedProject);
+        } catch (error) {
+          ui.displayError(error);
+        }
+        break;
+
+      default:
+        break;
+    }
+    e.target.reset();
+  };
+
+  // UTILITY FUNCTIONS 
+
+  // Input validation
+  const inputValidation = (e) => {
+    // empty fields will be invalid
+    if (!e.target.value.trim()) {
+      e.target.setCustomValidity("Field must not be empty");
+    } else {
+      e.target.setCustomValidity("");
+    }
+  };
+
+  // Remove task event classes when inputs are not focused
+  const noFocusToggleEdit = (e) => {
+    const activeEdit = query(".editing");
+    const activeAdding = query(".adding");
+
+    if (
+      activeEdit &&
+      (!activeEdit.contains(e.relatedTarget) ||
+        e.relatedTarget.classList.contains("add-project-btn") ||
+        e.relatedTarget.classList.contains("delete-project-btn"))
+    ) {
+      activeEdit.classList.remove("editing");
+    }
+
+    if (
+      activeAdding &&
+      (!activeAdding.contains(e.relatedTarget) ||
+        e.relatedTarget.classList.contains("edit-project-btn") ||
+        e.relatedTarget.classList.contains("delete-project-btn"))
+    ) {
+      activeAdding.classList.remove("adding");
+    }
+  };
+
+  // Check if tasks are on the page or that projects are in the select menu
+  const checkForContent = (type) => {
+    if (type === "task") {
+      if (queryAll(".task-container").length == 0) {
+        ui.displayError("No tasks available.");
       }
-    });
-  };
-
-  // Handle errors and display error on page and coonsole
-  const handleError = (error) => {
-    console.error(error);
-    ui.showError(error);
-  };
-
-  // Add all task container event listeners
-  const handleTaskContainerEvents = () => {
-    handleTaskContainerClickEvents();
-    handleTaskContainerFormSubmits();
-  };
-
-  // Add page listeners
-  const handlePageListeners = () => {
-    handleAddTaskSection();
-    handleAddTaskFormSubmit();
-    handleTaskContainerEvents();
-    hideEditForm();
-  };
-
-  // Get element from task container
-  const queryFromContainer = (taskContainer, selector) => {
-    return lookup.query(selector, taskContainer);
-  };
-
-  // Get active ediit
-  const getActiveEdit = () => {
-    return lookup.query(".editing");
-  };
-
-  // Get current select project from select menu
-  const getCurrentProjectId = () => {
-    const projectId = select.value;
-    return parseInt(projectId);
+    } else if (type === "project") {
+      if (query(".project-select").options.length == 1) {
+        ui.displayError("No projects available.");
+      }
+    }
   };
 
   return {
-    handleSelectMenu,
-    handlePageListeners,
-    displayTasks,
+    handleSelectMenuEvents,
+    handleMainSectionEvents,
   };
 };
 
