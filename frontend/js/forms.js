@@ -3,6 +3,7 @@ import { apiCalls } from "./apiCalls.js";
 const formHandler = () => {
   const api = apiCalls();
 
+  // Handles updating projects submissions
   const editProjectSubmit = async (form, projectId) => {
     if (!form.checkValidity()) {
       return null;
@@ -17,6 +18,7 @@ const formHandler = () => {
     return editProject;
   }
 
+  // handle editing tasks submissions
   const editTaskSubmit = async (form, projectId, taskId) => {
     if (!form.checkValidity()) {
       return null;
@@ -31,6 +33,7 @@ const formHandler = () => {
     return editedTask;
   };
 
+  // handle adding task submissions
   const addTaskSubmit = async (form, projectId) => {
     if (!form.checkValidity()) {
       return null;
@@ -44,6 +47,7 @@ const formHandler = () => {
     return addedTask;
   };
 
+  // handle adding project submissions
   const addProjectSubmit = async (form) => {
     if (!form.checkValidity()) {
       return null;

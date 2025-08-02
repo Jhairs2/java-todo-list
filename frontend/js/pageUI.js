@@ -29,11 +29,11 @@ const UI = () => {
 
   // Add event listeners
   const addFunctionality = () => {
-    if (!events.handleSelectMenuEvents) {
+    if (events.handleSelectMenuEvents) {
       events.handleSelectMenuEvents();
     }
 
-    if (!events.handleMainSectionEvents) {
+    if (events.handleMainSectionEvents) {
       events.handleMainSectionEvents();
     }
 
