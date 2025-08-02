@@ -1,23 +1,265 @@
-.hide  {
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Georgia, 'Times New Roman', Times, serif;
+    background-color:#fafafa;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+h1 {
+    color: black;
+    text-align: center;
+    font-weight: bolder;
+    font-size: clamp(2rem, 2.5vw, 3.5rem);
+}
+
+#header-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+}
+
+.edit-project-form,
+.editing .project-select, .adding .project-select, .add-project-form {
     display: none;
+}
+
+.editing .edit-project-form, .adding .add-project-form {
+    display: block;
+}
+
+.project-select-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.project-details-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media screen and (max-width: 760px ) {
+    .project-select-container {
+        justify-content: center;
+    }
+}
+
+img {
+    height: 1.5rem;
+}
+
+.project-select, .edit-project-input, .add-project-input {
+    width: 200px;
+    padding: 0.5rem;
+    border: 2px solid white;
+    font-size: clamp(0.75rem, 1.25rem, 1.5rem);
+    font-weight: bold;
+    background-color: darkgray;
+    border-radius: 8px;
+    cursor: pointer;
+    font-style: italic;
+    color: black;
+}
+.project-details-bts-container {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    gap: 1rem;
+}
+.project-select:focus {
+    outline: white;
+}
+
+.add-task-form {
+    width: 100%;
 
 }
+
+#add-task-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid white;
+    font-size: clamp(0.75rem, 1.25rem, 1.5rem);
+    font-weight: bold;
+    background-color: darkgray;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+
+}
+
 
 .task-section form {
     display: none;
 }
 
-.editing .task-section p  {
+#main-section {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.todo-content-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.task-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    border-radius: 8px;
+    background-color: #292524;
+    padding: 1rem;
+    border: transparent;
+    color: white;
+}
+
+.task-title-section {
+    flex: 1;
+    font-size: clamp(1rem, 1.25rem, 1.5rem);
+    font-weight: bold;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.edit-task-input {
+    font-size: clamp(0.75rem, 1.25rem, 1.5rem);
+    background-color: darkgray;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.25rem;
+    width: 100%;
+}
+
+.task-checkbox {
+    flex: 0 0 auto;
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.task-checkbox::before {
+    content: "";
+    display: block;
+    height: 30px;
+    width: 30px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.task-checkbox::after {
+    content: "";
+    display: none;
+    position: absolute;
+    left: 12px;
+    top: 6px;
+    width: 6px;
+    height: 15px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.task-checkbox:checked::before {
+    background-color: green;
+}
+
+.task-checkbox:checked::after {
+    display: block;
+}
+
+.edit-task-btn,
+.delete-task-btn,
+.edit-project-btn,
+.delete-project-btn, .add-project-btn {
+    padding: 0.5rem 0.75rem;
+    color: white;
+    font-weight: bold;
+    flex: 0 0 auto;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.edit-task-btn, .delete-task-btn {
+    width: 3rem;
+    height: auto;
+}
+
+.delete-task-btn,
+.delete-project-btn {
+    background-color: red;
+}
+
+.edit-task-btn,
+.edit-project-btn {
+    background-color: #4681f4;
+}
+
+.edit-project-btn, .delete-project-btn, .add-project-btn{
+    flex: 0 0 auto;
+}
+
+.add-project-btn {
+    background-color: green;
+}
+
+.edit-task-btn:hover,
+.delete-task-btn:hover,
+.edit-project-btn:hover,
+.delete-project-btn:hover {
+    background-color: lightgray;
+    transition: 400ms ease-in-out;
+}
+
+.edit-task-form {
+    display: none;
+}
+
+.editing .task-title {
     display: none;
 }
 
 
-.editing .task-section form{
+.editing .edit-task-form {
     display: block;
 }
 
-.completed {
+.completed .task-title {
     text-decoration: line-through;
 }
 
+span {
+    text-align: center;
+    color: black;
+}
 
+.footer-container {
+   margin-top: auto;
+   margin-left: auto;
+   margin-right: auto;
+}
