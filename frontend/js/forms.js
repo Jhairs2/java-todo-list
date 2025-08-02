@@ -3,45 +3,62 @@ import { apiCalls } from "./apiCalls.js";
 const formHandler = () => {
   const api = apiCalls();
 
-  const editFormSubmit = async (form, projectId, taskId) => {
+  const editProjectSubmit = async (form, projectId) => {
+    if (!form.checkValidity()) {
+      return null;
+    }
+
     const formData = new FormData(form);
+
+    const editProject = await api.updateProject(projectId, {
+      listTitle: formData.get("update-project-input")
+    })
+
+    return editProject;
+  }
+
+  const editTaskSubmit = async (form, projectId, taskId) => {
+    if (!form.checkValidity()) {
+      return null;
+    }
+
+    const formData = new FormData(form);
+
     const editedTask = await api.updateTask(projectId, taskId, {
-      task: formData.get("update"),
+      task: formData.get("update-task-input"),
     });
 
     return editedTask;
   };
 
-  const addTaskFormSubmit = async (form, projectId) => {
+  const addTaskSubmit = async (form, projectId) => {
+    if (!form.checkValidity()) {
+      return null;
+    }
     const formData = new FormData(form);
 
     const addedTask = await api.addTask(projectId, {
-      task: formData.get("add-task"),
+      task: formData.get("add-task-input"),
     });
 
     return addedTask;
   };
 
-  const submitTaskForm = async (
-    requestType,
-    form,
-    projectId,
-    taskId = null
-  ) => {
-    switch (requestType) {
-      case "PUT":
-        return await editFormSubmit(form, projectId, taskId);
-
-      case "POST":
-        return addTaskFormSubmit(form, projectId);
-
-      default:
-        console.error("Incorrect requestType");
-        break;
+  const addProjectSubmit = async (form) => {
+    if (!form.checkValidity()) {
+      return null;
     }
+    const formData = new FormData(form);
+
+    const addedProject = await api.addProject({
+      listTitle: formData.get("add-project-input"),
+    });
+
+    return addedProject;
   };
 
-  return { submitTaskForm };
+
+  return { editTaskSubmit, editProjectSubmit, addProjectSubmit, addTaskSubmit };
 };
 
 export default formHandler;
