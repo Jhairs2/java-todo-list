@@ -1,40 +1,53 @@
-import { uiBuilder, elementsLookUp } from "./uiHelper.js";
+import { uiFunctions } from "./uiFunctions.js";
 import { apiCalls } from "./apiCalls.js";
+import { query } from "./utilityFunctions.js";
 import eventListeners from "./events.js";
 
 const UI = () => {
+  // initialize imports
   const api = apiCalls();
-  const ui = uiBuilder();
-  const lookUp = elementsLookUp();
+  const ui = uiFunctions();
   const events = eventListeners();
-  const select = lookUp.query("#project-select");
+  const select = query(".project-select");
 
-  const getProjects = async () => {
-    return await api.getProjects();
-  };
-
+  // Load projects into select menu
   const loadProjects = async () => {
-    const projects = await getProjects();
+    const projects = await api.getProjects();
     ui.populateSelectMenu(projects);
   };
 
   // Load tasks and menu listener
   const loadTasks = async () => {
-    // Add change listener to select menu
-    if (!events.handleSelectMenu()) {
-      events.handleSelectMenu();
-    }
     // Select first project in menu and display it's tasks
-    select.value = select.options[1].value;
-    events.displayTasks(select.value);
+    if (select.options.length > 1) {
+      select.value = select.options[1].value;
+      const tasks = await api.getTasks(select.value);
+      ui.displayTasks(tasks);
+    }
+
   };
 
+  // Add event listeners
+  const addFunctionality = () => {
+    if (!events.handleSelectMenuEvents) {
+      events.handleSelectMenuEvents();
+    }
+
+    if (!events.handleMainSectionEvents) {
+      events.handleMainSectionEvents();
+    }
+
+  }
+
+  // initialize app
   const runApp = async () => {
     try {
+      addFunctionality();
       await loadProjects();
     } catch (error) {
       console.log(error);
-      ui.showError("Error: unable to load projects from database ):");
+
+      ui.displayError("Error: unable to load projects from database ):");
       return;
     }
 
@@ -42,13 +55,13 @@ const UI = () => {
       await loadTasks();
     } catch (error) {
       console.log(error);
-      ui.showError(
+      ui.displayError(
         `Error: unable to load tasks from project ${select.value} ):`
       );
       return;
     }
 
-    events.handlePageListeners();
+
   };
 
   return {
