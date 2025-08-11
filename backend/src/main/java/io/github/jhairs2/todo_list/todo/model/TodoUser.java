@@ -1,10 +1,37 @@
 package io.github.jhairs2.todo_list.todo.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class TodoUser {
+
+    @Id
+    @SequenceGenerator(name = "users_sequence", sequenceName = "users_sequence", allocationSize = 1)
+    @GeneratedValue(generator = "users_sequence", strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String authority;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectList> projects;
 
     public TodoUser() {
     }
@@ -42,6 +69,10 @@ public class TodoUser {
 
     public String getAuthority() {
         return this.authority;
+    }
+
+    public List<ProjectList> getProjects() {
+        return this.projects;
     }
 
     public void setId(Long id) {
