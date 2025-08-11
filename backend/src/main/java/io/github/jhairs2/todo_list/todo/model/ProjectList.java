@@ -21,7 +21,6 @@ public class ProjectList {
     @Id
     @SequenceGenerator(name = "list_sequence", sequenceName = "list_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "list_sequence")
-
     private Long id;
 
     @Column(nullable = false)
