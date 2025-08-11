@@ -1,5 +1,6 @@
 package io.github.jhairs2.todo_list.todo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -31,7 +32,7 @@ public class TodoUser {
     private String authority;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProjectList> projects;
+    private List<ProjectList> projects = new ArrayList<>();
 
     public TodoUser() {
     }
