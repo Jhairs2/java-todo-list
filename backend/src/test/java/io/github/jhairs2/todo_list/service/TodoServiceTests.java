@@ -61,7 +61,7 @@ public class TodoServiceTests {
         void Get_IfProjectAndTasksExist_ReturnAllTasks() {
                 // Arrange
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
-                when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
+                when(this.todoItemDTOMapper.convertToDTOList(this.projectList.getTasks()))
                                 .thenReturn(List.of(this.todoItemDTO));
 
                 // Act
@@ -82,7 +82,7 @@ public class TodoServiceTests {
                 // Arrange
                 List<TodoItemDTO> emptyList = List.of();
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
-                when(this.todoItemDTOMapper.convertTodoItemsToDTOList(this.projectList.getTasks()))
+                when(this.todoItemDTOMapper.convertToDTOList(this.projectList.getTasks()))
                                 .thenReturn(emptyList);
 
                 // Act
@@ -116,7 +116,7 @@ public class TodoServiceTests {
                 // Arrange
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList));
                 when(this.todoRepository.save(this.todoItem)).thenReturn(this.todoItem);
-                when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
+                when(this.todoItemDTOMapper.convertToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
 
                 // Act
                 TodoItemDTO results = this.todoService.addTodoToList(1L, this.todoItem);
@@ -181,7 +181,7 @@ public class TodoServiceTests {
                                 this.todoItem.getList().getListTitle());
 
                 when(this.todoRepository.save(this.todoItem)).thenReturn(this.todoItem);
-                when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(newTask);
+                when(this.todoItemDTOMapper.convertToDTO(this.todoItem)).thenReturn(newTask);
 
                 // Act
                 TodoItemDTO results = this.todoService.updateTodoById(1L, updatedTask);
@@ -209,7 +209,7 @@ public class TodoServiceTests {
         void Delete_WithValidTodoId_ReturnDeletedTodo() {
                 // Arrange
                 when(this.todoRepository.findById(1L)).thenReturn(Optional.of(this.todoItem));
-                when(this.todoItemDTOMapper.convertTodoItemToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
+                when(this.todoItemDTOMapper.convertToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
 
                 // Act
                 TodoItemDTO results = this.todoService.deleteTodoFromList(1L);

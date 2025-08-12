@@ -34,7 +34,7 @@ public class TodoService {
         ProjectList project = this.projectListRepository.findById(id)
                 .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found."));
 
-        return this.todoItemDTOMapper.convertTodoItemsToDTOList(project.getTasks());
+        return this.todoItemDTOMapper.convertToDTOList(project.getTasks());
 
     }
 
@@ -49,7 +49,7 @@ public class TodoService {
         task.setList(project);
         project.getTasks().add(task);
 
-        return this.todoItemDTOMapper.convertTodoItemToDTO(this.todoRepository.save(task));
+        return this.todoItemDTOMapper.convertToDTO(this.todoRepository.save(task));
 
     }
 
@@ -65,7 +65,7 @@ public class TodoService {
             oldTask.setCompleted(updatedTask.isCompleted());
         }
 
-        return this.todoItemDTOMapper.convertTodoItemToDTO(this.todoRepository.save(oldTask));
+        return this.todoItemDTOMapper.convertToDTO(this.todoRepository.save(oldTask));
 
     }
 
@@ -75,7 +75,7 @@ public class TodoService {
 
         this.todoRepository.delete(deletedTask);
 
-        return this.todoItemDTOMapper.convertTodoItemToDTO(deletedTask);
+        return this.todoItemDTOMapper.convertToDTO(deletedTask);
     }
 
 }

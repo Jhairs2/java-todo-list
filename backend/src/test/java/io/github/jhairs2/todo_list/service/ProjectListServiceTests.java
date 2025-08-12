@@ -63,7 +63,7 @@ public class ProjectListServiceTests {
 
                 when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
 
-                when(projectListDTOMapper.convertProjectsToDTOList(this.testProjectList))
+                when(projectListDTOMapper.convertToDTOList(this.testProjectList))
                                 .thenReturn(this.testProjectListDTO);
 
                 List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
@@ -80,7 +80,7 @@ public class ProjectListServiceTests {
         void Get_IfProjectsDoNotExist_ReturnEmptyList() {
                 when(this.projectListRepository.findAll()).thenReturn(List.of());
 
-                when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
+                when(projectListDTOMapper.convertToDTOList(List.of()))
                                 .thenReturn(List.of());
 
                 List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
@@ -95,7 +95,7 @@ public class ProjectListServiceTests {
         void Get_WithValidProjectId_ReturnSingleProject() {
 
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
-                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
 
                 ProjectListDTO results = this.projectListService.getProjectList(1L);
 
@@ -120,7 +120,7 @@ public class ProjectListServiceTests {
         void Create_WithValidArgs_ReturnCreatedProject() {
                 // Arrange
                 when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
-                when(this.projectListDTOMapper.convertProjectToDTO(projectList1)).thenReturn(this.projectList1DTO);
+                when(this.projectListDTOMapper.convertToDTO(projectList1)).thenReturn(this.projectList1DTO);
 
                 // Act
                 ProjectListDTO results = this.projectListService.createNewProjectList(this.projectList1);
@@ -145,7 +145,7 @@ public class ProjectListServiceTests {
                                 this.projectList1.getListTitle());
 
                 when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
-                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1))
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1))
                                 .thenReturn(updatedProject);
 
                 ProjectListDTO results = this.projectListService.updateProjectList(1L, projectList2);
@@ -179,7 +179,7 @@ public class ProjectListServiceTests {
         void Delete_WithValidProjectId_ReturnDeletedProject() {
                 when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
 
-                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
 
                 ProjectListDTO results = this.projectListService.deleteProjectList(1L);
 

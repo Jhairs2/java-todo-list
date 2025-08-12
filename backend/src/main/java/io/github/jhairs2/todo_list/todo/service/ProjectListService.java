@@ -26,12 +26,12 @@ public class ProjectListService {
 
     public List<ProjectListDTO> getAllProjectLists() {
 
-        return this.projectListDTOMapper.convertProjectsToDTOList(this.projectListRepository.findAll());
+        return this.projectListDTOMapper.convertToDTOList(this.projectListRepository.findAll());
 
     }
 
     public ProjectListDTO getProjectList(Long id) {
-        return this.projectListDTOMapper.convertProjectToDTO(
+        return this.projectListDTOMapper.convertToDTO(
                 this.projectListRepository.findById(id)
                         .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found.")));
     }
@@ -40,7 +40,7 @@ public class ProjectListService {
         if (projectList == null) {
             throw new IllegalArgumentException();
         }
-        return this.projectListDTOMapper.convertProjectToDTO(this.projectListRepository.save(projectList));
+        return this.projectListDTOMapper.convertToDTO(this.projectListRepository.save(projectList));
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class ProjectListService {
 
         newProject.setListTitle(projectList.getListTitle());
 
-        return this.projectListDTOMapper.convertProjectToDTO(this.projectListRepository.save(newProject));
+        return this.projectListDTOMapper.convertToDTO(this.projectListRepository.save(newProject));
     }
 
     public ProjectListDTO deleteProjectList(Long id) {
@@ -59,7 +59,7 @@ public class ProjectListService {
 
         this.projectListRepository.delete(deletedProject);
 
-        return this.projectListDTOMapper.convertProjectToDTO(deletedProject);
+        return this.projectListDTOMapper.convertToDTO(deletedProject);
     }
 
 }
