@@ -22,7 +22,7 @@ public class TodoUser {
     @GeneratedValue(generator = "users_sequence", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -40,7 +40,7 @@ public class TodoUser {
     public TodoUser(String username, String password) {
         this.username = username;
         this.password = password;
-        this.authority = "ROLE_USER";
+        this.authority = "USER";
     }
 
     public TodoUser(String username, String password, String authority) {
