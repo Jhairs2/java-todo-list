@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(value = { IllegalArgumentException.class, InvalidUserNamePasswordException.class })
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 exception.getMessage(),
