@@ -11,4 +11,6 @@ import io.github.jhairs2.todo_list.todo.model.TodoUser;
 public interface TodoUserRepository extends JpaRepository<TodoUser, Long> {
 
     Optional<TodoUser> findByUsername(String username);
+
+    boolean existsByUsername(String username);
 }
