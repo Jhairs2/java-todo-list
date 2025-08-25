@@ -3,7 +3,6 @@ package io.github.jhairs2.todo_list.todo.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,10 +39,10 @@ public class TodoUserService {
     public TodoUserDTO registerUser(RegisterRequest registerRequest) {
 
         logger.info("Making sure username and password are valid...");
-        if (isUsernameOrPasswordBlank(registerRequest.username(), registerRequest.password())
-                || !isPasswordValid(registerRequest.password())) {
-            logger.error("Username or password is invalid");
-            throw new InvalidUserNamePasswordException("Username or password is invalid");
+
+        if (!isPasswordValid(registerRequest.password())) {
+            logger.error("password is invalid");
+            throw new InvalidUserNamePasswordException("password is not at least 12 characters");
         }
 
         logger.info("Ensuring username is not already taken...");
@@ -63,11 +62,6 @@ public class TodoUserService {
         logger.info("Authenticating user {}...", loginRequest.username());
         Authentication auth = authenticateUser(loginRequest);
 
-        if (!auth.isAuthenticated()) {
-            logger.error("User credentials could not be validated");
-            throw new BadCredentialsException("User credentials could not be validated");
-        }
-
         logger.info("User Authenticated issuing token...");
         return jwtService.generateToken(loginRequest.username(), auth.getAuthorities());
 
@@ -82,16 +76,12 @@ public class TodoUserService {
         return this.todoUserRepository.existsByUsername(username);
     }
 
-    private boolean isUsernameOrPasswordBlank(String username, String password) {
-        return username.isBlank() || password.isBlank();
-    }
-
     private boolean isPasswordValid(String password) {
-        if (password.length() < 12) {
-            return false;
-        }
 
-        return true;
+        return password.length() >= 12
+                && password.matches(".*[A-Z].*")
+                && password.matches(".*[a-z].*")
+                && password.matches(".*\\d.*");
     }
 
 }
