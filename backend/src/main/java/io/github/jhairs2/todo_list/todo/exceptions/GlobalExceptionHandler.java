@@ -12,13 +12,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = { ProjectListNotFoundException.class, TodoItemNotFoundException.class })
     public ResponseEntity<Object> handleProjectListNotFoundException(
-            Exception exception) {
+            RuntimeException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 exception.getMessage(),
                 HttpStatus.NOT_FOUND,
                 LocalDateTime.now());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(value = { IllegalArgumentException.class, InvalidUserNamePasswordException.class })
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 LocalDateTime.now());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 LocalDateTime.now());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
 }
