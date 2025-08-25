@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.jhairs2.todo_list.todo.dto.TodoItemDTO;
-import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @RestController
@@ -29,24 +28,26 @@ public class TodoItemController {
     }
 
     @GetMapping
-    public List<TodoItemDTO> getAllTodosFromList(@PathVariable("projectId") Long id) {
-        return this.todoService.getAllTodosFromList(id);
+    public List<TodoItemDTO> getAllTodosFromList(@PathVariable("projectId") Long projectId) {
+        return this.todoService.getAllTodosFromList(projectId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TodoItemDTO addTodoToList(@PathVariable("projectId") Long id, @RequestBody TodoItem task) {
-        return this.todoService.addTodoToList(id, task);
+    public TodoItemDTO addTodoToList(@PathVariable("projectId") Long projectId, @RequestBody TodoItemDTO todoItemDTO) {
+        return this.todoService.addTodoToList(projectId, todoItemDTO);
     }
 
-    @PutMapping(path = "/{taskId}")
-    public TodoItemDTO updateTodoById(@PathVariable("taskId") Long id, @RequestBody TodoItem task) {
-        return this.todoService.updateTodoById(id, task);
+    @PutMapping(path = "/{todoItemId}")
+    public TodoItemDTO updateTodoById(@PathVariable("projectId") Long projectId,
+            @PathVariable("todoItemId") Long todoItemId, @RequestBody TodoItemDTO todoItemDTO) {
+        return this.todoService.updateTodoById(projectId, todoItemId, todoItemDTO);
     }
 
-    @DeleteMapping(path = "/{taskId}")
-    public TodoItemDTO deleteTodoFromList(@PathVariable("taskId") Long id) {
-        return this.todoService.deleteTodoFromList(id);
+    @DeleteMapping(path = "/{todoItemId}")
+    public TodoItemDTO deleteTodoFromList(@PathVariable("projectId") Long projectId,
+            @PathVariable("todoItemId") Long todoItemId) {
+        return this.todoService.deleteTodoFromList(projectId, todoItemId);
     }
 
 }

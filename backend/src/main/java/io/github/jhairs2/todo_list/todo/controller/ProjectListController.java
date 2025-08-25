@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.service.ProjectListService;
+import io.micrometer.common.lang.NonNull;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/api/v1/projects")
@@ -35,24 +37,24 @@ public class ProjectListController {
     }
 
     @GetMapping(path = "/{projectListId}")
-    public ProjectListDTO getProjectList(@PathVariable("projectListId") Long id) {
-        return this.projectListService.getProjectList(id);
+    public ProjectListDTO getProjectList(@NonNull @PathVariable("projectListId") Long projectListId) {
+        return this.projectListService.getProjectList(projectListId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectListDTO createNewProjectList(@RequestBody ProjectList projectList) {
-        return this.projectListService.createNewProjectList(projectList);
+    public ProjectListDTO createNewProjectList(@Valid @RequestBody ProjectListDTO projectListDTO) {
+        return this.projectListService.createNewProjectList(projectListDTO);
     }
 
     @PutMapping(path = "/{projectListId}")
-    public ProjectListDTO updateProjectList(@PathVariable("projectListId") Long id,
-            @RequestBody ProjectList projectList) {
-        return this.projectListService.updateProjectList(id, projectList);
+    public ProjectListDTO updateProjectList(@NonNull @PathVariable("projectListId") Long projectListId,
+            @Valid @RequestBody ProjectListDTO projectListDTO) {
+        return this.projectListService.updateProjectList(projectListId, projectListDTO);
     }
 
     @DeleteMapping(path = "/{projectListId}")
-    public ProjectListDTO deleteProjectList(@PathVariable("projectListId") Long id) {
+    public ProjectListDTO deleteProjectList(@NonNull @PathVariable("projectListId") Long id) {
         return this.projectListService.deleteProjectList(id);
     }
 

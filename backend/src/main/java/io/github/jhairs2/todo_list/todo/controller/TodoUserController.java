@@ -9,6 +9,7 @@ import io.github.jhairs2.todo_list.todo.dto.LoginRequest;
 import io.github.jhairs2.todo_list.todo.dto.RegisterRequest;
 import io.github.jhairs2.todo_list.todo.dto.TodoUserDTO;
 import io.github.jhairs2.todo_list.todo.service.TodoUserService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/api/v1/accounts")
@@ -21,12 +22,12 @@ public class TodoUserController {
     }
 
     @PostMapping(path = "/register")
-    public TodoUserDTO registerUser(@RequestBody RegisterRequest registerRequest) {
+    public TodoUserDTO registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         return this.todoUserService.registerUser(registerRequest);
     }
 
     @PostMapping(path = "/login")
-    public String loginUser(@RequestBody LoginRequest loginRequest) {
+    public String loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         return this.todoUserService.loginUser(loginRequest);
     }
 
