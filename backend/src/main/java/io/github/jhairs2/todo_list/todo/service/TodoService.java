@@ -115,7 +115,7 @@ public class TodoService {
 
         logger.info("Deleting task...");
         TodoItem deletedTask = this.todoRepository.findByListIdAndId(projectListId, todoItemId)
-                .orElseThrow(() -> new TodoItemNotFoundException("Task with that " + todoItemId + " does not exist."));
+                .orElseThrow(() -> new TodoItemNotFoundException("Task with id " + todoItemId + " does not exist."));
 
         this.todoRepository.delete(deletedTask);
 

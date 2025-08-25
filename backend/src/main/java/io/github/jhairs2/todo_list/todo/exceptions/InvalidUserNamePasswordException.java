@@ -1,6 +1,6 @@
 package io.github.jhairs2.todo_list.todo.exceptions;
 
-public class InvalidUserNamePasswordException extends RuntimeException {
+public class InvalidUserNamePasswordException extends IllegalArgumentException {
 
     public InvalidUserNamePasswordException(String message) {
         super(message);

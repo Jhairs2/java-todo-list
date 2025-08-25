@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
 import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
-import io.github.jhairs2.todo_list.todo.model.ProjectList;
 import io.github.jhairs2.todo_list.todo.service.ProjectListService;
-import io.micrometer.common.lang.NonNull;
 import jakarta.validation.Valid;
 
 @RestController
@@ -37,7 +35,7 @@ public class ProjectListController {
     }
 
     @GetMapping(path = "/{projectListId}")
-    public ProjectListDTO getProjectList(@NonNull @PathVariable("projectListId") Long projectListId) {
+    public ProjectListDTO getProjectList(@PathVariable("projectListId") Long projectListId) {
         return this.projectListService.getProjectList(projectListId);
     }
 
@@ -48,14 +46,14 @@ public class ProjectListController {
     }
 
     @PutMapping(path = "/{projectListId}")
-    public ProjectListDTO updateProjectList(@NonNull @PathVariable("projectListId") Long projectListId,
+    public ProjectListDTO updateProjectList(@PathVariable("projectListId") Long projectListId,
             @Valid @RequestBody ProjectListDTO projectListDTO) {
         return this.projectListService.updateProjectList(projectListId, projectListDTO);
     }
 
     @DeleteMapping(path = "/{projectListId}")
-    public ProjectListDTO deleteProjectList(@NonNull @PathVariable("projectListId") Long id) {
-        return this.projectListService.deleteProjectList(id);
+    public ProjectListDTO deleteProjectList(@PathVariable("projectListId") Long projectListId) {
+        return this.projectListService.deleteProjectList(projectListId);
     }
 
 }
