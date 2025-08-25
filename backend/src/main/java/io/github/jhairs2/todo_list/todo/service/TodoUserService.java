@@ -42,7 +42,7 @@ public class TodoUserService {
 
         if (!isPasswordValid(registerRequest.password())) {
             logger.error("password is invalid");
-            throw new InvalidUserNamePasswordException("password is not at least 12 characters");
+            throw new InvalidUserNamePasswordException("password does not meet requirements");
         }
 
         logger.info("Ensuring username is not already taken...");
