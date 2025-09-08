@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import io.github.jhairs2.todo_list.todo.dto.LoginRequest;
 import io.github.jhairs2.todo_list.todo.dto.RegisterRequest;
 import io.github.jhairs2.todo_list.todo.dto.TodoUserDTO;
+import io.github.jhairs2.todo_list.todo.dto.Token;
 import io.github.jhairs2.todo_list.todo.exceptions.InvalidUserNamePasswordException;
 import io.github.jhairs2.todo_list.todo.mapper.TodoUserDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.TodoUser;
@@ -34,6 +35,7 @@ public class TodoUserService {
         this.encoder = encoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+
     }
 
     public TodoUserDTO registerUser(RegisterRequest registerRequest) {
@@ -58,12 +60,12 @@ public class TodoUserService {
 
     }
 
-    public String loginUser(LoginRequest loginRequest) {
+    public Token loginUser(LoginRequest loginRequest) {
         logger.info("Authenticating user {}...", loginRequest.username());
         Authentication auth = authenticateUser(loginRequest);
 
         logger.info("User Authenticated issuing token...");
-        return jwtService.generateToken(loginRequest.username(), auth.getAuthorities());
+        return new Token(this.jwtService.generateToken(loginRequest.username(), auth.getAuthorities()));
 
     }
 
