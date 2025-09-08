@@ -19,7 +19,7 @@ public class TodoConfig {
     CommandLineRunner commandLineRunner(TodoRepository todoRepository, ProjectListRepository projectListRepository,
             TodoUserRepository todoUserRepository, PasswordEncoder encoder) {
         return args -> {
-            TodoUser user = new TodoUser("Justin", "pass");
+            TodoUser user = new TodoUser("Justin", "Pass12345678");
             TodoItem item = new TodoItem("Hello!");
             ProjectList list = new ProjectList("Todos");
             ProjectList list2 = new ProjectList("Todossss");
