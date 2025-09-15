@@ -6,14 +6,13 @@ import formEvents from "./formEvents.js";
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
 
-
-
 // Handle register submits
 document.addEventListener("DOMContentLoaded", () => {
     const forms = formEvents();
     const registerForm = query(".register-form");
     const submitBtn = query(".submit-btn", registerForm)
     const statusMessage = query(".status-message");
+
     registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
@@ -43,16 +42,18 @@ showPasswordCheckbox.addEventListener("change", () => {
     }
 })
 
-// SHow completion message upon successful register
+// Show completion message upon successful register
 const completeRegister = () => {
     const main = query("main");
     main.replaceChildren();
 
     const p = buildUIElement({ element: "p", attributes: { class: "register-message" } });
+    p.textContent = "Successfully Registered! Return to ";
+
     const a = buildUIElement({ element: "a", properties: { href: "./login.html" } });
     a.textContent = "Login";
-    p.textContent = `Successfully Registered! Return to ${a}`;
-    main.append(p);
+
+    main.append(p, a);
 }
 
 
