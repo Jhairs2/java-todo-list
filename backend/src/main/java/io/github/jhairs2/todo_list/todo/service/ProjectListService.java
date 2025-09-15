@@ -86,7 +86,8 @@ public class ProjectListService {
         logger.info("Looking for project {} to delete...", projectListId);
         ProjectList deletedProject = this.projectListRepository
                 .findByUserIdAndId(userId, projectListId)
-                .orElseThrow(() -> new ProjectListNotFoundException("Project with that id can not be found."));
+                .orElseThrow(() -> new ProjectListNotFoundException(
+                        "Project with id: " + projectListId + " can not be found."));
 
         logger.info("Project {} found. Deleting from DB...", projectListId);
         this.projectListRepository.delete(deletedProject);
