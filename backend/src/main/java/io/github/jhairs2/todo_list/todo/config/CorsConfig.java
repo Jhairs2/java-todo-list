@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5500", "http://127.0.0.1:5500",
-                        "https://jhairs2.github.io/java-todo-list)")
+                        "https://jhairs2.github.io/java-todo-list")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
