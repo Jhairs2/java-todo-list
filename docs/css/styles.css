@@ -191,6 +191,7 @@ img {
     appearance: none;
     cursor: pointer;
     position: relative;
+    line-height: 1.2;
 }
 
 .task-checkbox::before {

@@ -2,28 +2,37 @@ import { buildUIElement, query } from "../utility/utilityFunctions.js";
 import formEvents from "./formEvents.js";
 
 // Initialize imports
-const forms = formEvents();
-const registerForm = query(".register-form");
+
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
 
 
+
 // Handle register submits
-registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    try {
-        const addedUser = await forms.registerUser(registerForm);
-        completeRegister();
-        return addedUser;
-    }
-    catch (error) {
-        console.log(error);
-        const p = query(".error-message");
-        p.textContent = error;
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    const forms = formEvents();
+    const registerForm = query(".register-form");
+    const submitBtn = query(".submit-btn", registerForm)
+    const statusMessage = query(".status-message");
+    registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+            statusMessage.textContent = "Registering! Please wait..."
+            submitBtn.disabled = true;
+            const addedUser = await forms.registerUser(registerForm);
+            completeRegister();
+            return addedUser;
+        }
+        catch (error) {
+            submitBtn.disabled = false;
+            statusMessage.textContent = error;
+            console.log(error);
+        }
 
 
+    })
 })
+
 
 // Enable password visibility
 showPasswordCheckbox.addEventListener("change", () => {
