@@ -124,7 +124,7 @@ img {
 }
 #add-task-input::placeholder {
   color: black;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 
@@ -183,10 +183,12 @@ img {
 
 .edit-task-input::placeholder {
     color: black;
-    opacity: 0.8;
+    opacity: 0.6;
 }
 
 .task-checkbox {
+    display: flex;
+    align-items: center;
     flex: 0 0 auto;
     appearance: none;
     cursor: pointer;
