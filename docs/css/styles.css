@@ -14,10 +14,7 @@ body {
     flex-direction: column;
 }
 
-input::placeholder {
-  color: black;
-  opacity: 1;
-}
+
 
 h1 {
     text-align: center;
@@ -122,8 +119,12 @@ img {
     background-color: darkgray;
     border-radius: 8px;
     cursor: pointer;
-    color: white;
+    color: black;
 
+}
+#add-task-input::placeholder {
+  color: black;
+  opacity: 0.8;
 }
 
 
@@ -160,12 +161,15 @@ img {
     color: white;
 }
 
-.task-title-section {
+.task-title-section {   
+    display: flex;
+    align-items: center;
     flex: 1;
     font-size: clamp(1rem, 1.25rem, 1.5rem);
     font-weight: bold;
     overflow: hidden;
     word-wrap: break-word;
+     
 }
 
 .edit-task-input {
@@ -175,6 +179,11 @@ img {
     cursor: pointer;
     padding: 0.25rem;
     width: 100%;
+}
+
+.edit-task-input::placeholder {
+    color: black;
+    opacity: 0.8;
 }
 
 .task-checkbox {
