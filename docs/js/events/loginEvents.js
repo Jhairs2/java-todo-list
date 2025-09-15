@@ -5,19 +5,17 @@ import { query } from "../utility/utilityFunctions.js";
 const error = localStorage.getItem("error");
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
+const statusMessage = query(".status-message");
 
-
+if (error) {
+    statusMessage.textContent = error;
+}
 
 // Handle Login submits
 document.addEventListener("DOMContentLoaded", () => {
     const forms = formEvents();
     const loginForm = query(".login-form");
     const submitBtn = query(".submit-btn", loginForm)
-    const statusMessage = query(".status-message");
-
-    if (error) {
-        statusMessage.textContent = error;
-    }
 
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
