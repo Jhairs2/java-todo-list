@@ -11,14 +11,14 @@ import io.github.jhairs2.todo_list.todo.model.ProjectList;
 @Component
 public class ProjectListDTOMapper {
 
-    public ProjectListDTO convertProjectToDTO(ProjectList projectList) {
+    public ProjectListDTO convertToDTO(ProjectList projectList) {
         ProjectListDTO projectListDTO = new ProjectListDTO(projectList.getId(), projectList.getListTitle());
         return projectListDTO;
     }
 
-    public List<ProjectListDTO> convertProjectsToDTOList(List<ProjectList> projectLists) {
+    public List<ProjectListDTO> convertToDTOList(List<ProjectList> projectLists) {
         return projectLists.stream()
-                .map(this::convertProjectToDTO)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 

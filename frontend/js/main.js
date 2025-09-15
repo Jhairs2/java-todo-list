@@ -1,4 +1,4 @@
-import UI from "./pageUI.js";
+import UI from "./ui/pageUI.js";
 
 const main = async () => {
   await UI().runApp();

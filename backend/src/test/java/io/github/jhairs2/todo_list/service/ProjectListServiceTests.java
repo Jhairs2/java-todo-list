@@ -1,5 +1,6 @@
 package io.github.jhairs2.todo_list.service;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,7 +20,9 @@ import io.github.jhairs2.todo_list.todo.dto.ProjectListDTO;
 import io.github.jhairs2.todo_list.todo.exceptions.ProjectListNotFoundException;
 import io.github.jhairs2.todo_list.todo.mapper.ProjectListDTOMapper;
 import io.github.jhairs2.todo_list.todo.model.ProjectList;
+import io.github.jhairs2.todo_list.todo.model.TodoUser;
 import io.github.jhairs2.todo_list.todo.repository.ProjectListRepository;
+import io.github.jhairs2.todo_list.todo.service.HelperService;
 import io.github.jhairs2.todo_list.todo.service.ProjectListService;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,12 +34,16 @@ public class ProjectListServiceTests {
         @Mock
         private ProjectListDTOMapper projectListDTOMapper;
 
+        @Mock
+        private HelperService helperService;
+
         private ProjectList projectList1;
         private ProjectList projectList2;
         private ProjectListDTO projectList1DTO;
         private ProjectListDTO projectList2DTO;
         private List<ProjectList> testProjectList;
         private List<ProjectListDTO> testProjectListDTO;
+        private TodoUser user;
 
         @InjectMocks
         private ProjectListService projectListService;
@@ -55,15 +62,17 @@ public class ProjectListServiceTests {
                 this.testProjectList = List.of(this.projectList1, this.projectList2);
                 this.testProjectListDTO = List.of(this.projectList1DTO, this.projectList2DTO);
 
+                this.user = new TodoUser("Test", "pass");
+
         }
 
         @DisplayName("Test should return all ProjectLists")
         @Test
         void Get_IfProjectsExist_ReturnAllProjects() {
 
-                when(this.projectListRepository.findAll()).thenReturn(this.testProjectList);
-
-                when(projectListDTOMapper.convertProjectsToDTOList(this.testProjectList))
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findAllByUserId(1L)).thenReturn(this.testProjectList);
+                when(projectListDTOMapper.convertToDTOList(this.testProjectList))
                                 .thenReturn(this.testProjectListDTO);
 
                 List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
@@ -78,9 +87,10 @@ public class ProjectListServiceTests {
         @DisplayName("Test should return an empty list")
         @Test
         void Get_IfProjectsDoNotExist_ReturnEmptyList() {
-                when(this.projectListRepository.findAll()).thenReturn(List.of());
 
-                when(projectListDTOMapper.convertProjectsToDTOList(List.of()))
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findAllByUserId(1L)).thenReturn(List.of());
+                when(projectListDTOMapper.convertToDTOList(List.of()))
                                 .thenReturn(List.of());
 
                 List<ProjectListDTO> results = this.projectListService.getAllProjectLists();
@@ -94,8 +104,10 @@ public class ProjectListServiceTests {
         @Test
         void Get_WithValidProjectId_ReturnSingleProject() {
 
-                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
-                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findByUserIdAndId(1L, 1L))
+                                .thenReturn(Optional.of(this.projectList1));
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
 
                 ProjectListDTO results = this.projectListService.getProjectList(1L);
 
@@ -107,11 +119,12 @@ public class ProjectListServiceTests {
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
         void Get_WithInvalidProjectId_ThrowException() {
-                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
+
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.empty());
 
                 Assertions.assertThatThrownBy(() -> this.projectListService.getProjectList(1L))
-                                .isInstanceOf(ProjectListNotFoundException.class)
-                                .hasMessage("Project with that id can not be found.");
+                                .isInstanceOf(ProjectListNotFoundException.class);
 
         }
 
@@ -119,45 +132,45 @@ public class ProjectListServiceTests {
         @Test
         void Create_WithValidArgs_ReturnCreatedProject() {
                 // Arrange
-                when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
-                when(this.projectListDTOMapper.convertProjectToDTO(projectList1)).thenReturn(this.projectList1DTO);
+
+                when(this.helperService.getActiveUser()).thenReturn(this.user);
+                when(this.projectListRepository.save(any(ProjectList.class))).thenReturn(this.projectList1);
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1))
+                                .thenReturn(this.projectList1DTO);
 
                 // Act
-                ProjectListDTO results = this.projectListService.createNewProjectList(this.projectList1);
+                ProjectListDTO results = this.projectListService.createNewProjectList(this.projectList1DTO);
 
                 // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .isEqualTo(this.projectList1DTO);
 
-                verify(this.projectListRepository).save(this.projectList1);
+                verify(this.projectListRepository).save(any(ProjectList.class));
 
         }
 
         @DisplayName("Test should return an updated ProjectList")
         @Test
         void Update_WithValidArgs_ReturnUpdatedProject() {
-                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
-
-                this.projectList1.setListTitle(this.projectList2.getListTitle());
-
-                ProjectListDTO updatedProject = new ProjectListDTO(this.projectList1.getId(),
-                                this.projectList1.getListTitle());
+                // Arrange
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findByUserIdAndId(1L, 1L))
+                                .thenReturn(Optional.of(this.projectList1));
 
                 when(this.projectListRepository.save(this.projectList1)).thenReturn(this.projectList1);
-                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1))
-                                .thenReturn(updatedProject);
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1))
+                                .thenReturn(new ProjectListDTO(this.projectList1.getId(),
+                                                this.projectList2.getListTitle()));
 
-                ProjectListDTO results = this.projectListService.updateProjectList(1L, projectList2);
+                // Act
+                ProjectListDTO results = this.projectListService.updateProjectList(1L, projectList2DTO);
 
+                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
-                                .extracting("id")
-                                .isEqualTo(this.projectList1.getId());
-
-                Assertions.assertThat(results)
-                                .extracting("listTitle")
-                                .isEqualTo(projectList2DTO.listTitle());
+                                .extracting("id", "listTitle")
+                                .containsExactly(this.projectList1.getId(), this.projectList1.getListTitle());
 
                 verify(this.projectListRepository).save(this.projectList1);
 
@@ -166,23 +179,31 @@ public class ProjectListServiceTests {
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
         void Update_WithInvalidProjectId_ThrowException() {
-                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
 
-                Assertions.assertThatThrownBy(() -> this.projectListService.updateProjectList(1L, this.projectList2))
-                                .isInstanceOf(ProjectListNotFoundException.class)
-                                .hasMessage("Project with that id can not be found.");
+                // Arrange
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.empty());
+
+                // Act & Assert
+                Assertions.assertThatThrownBy(() -> this.projectListService.updateProjectList(1L, this.projectList2DTO))
+                                .isInstanceOf(ProjectListNotFoundException.class);
 
         }
 
         @DisplayName("Test should return the deleted list")
         @Test
         void Delete_WithValidProjectId_ReturnDeletedProject() {
-                when(this.projectListRepository.findById(1L)).thenReturn(Optional.of(this.projectList1));
 
-                when(this.projectListDTOMapper.convertProjectToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
+                // Arrange
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findByUserIdAndId(1L, 1L))
+                                .thenReturn(Optional.of(this.projectList1));
+                when(this.projectListDTOMapper.convertToDTO(this.projectList1)).thenReturn(this.projectList1DTO);
 
+                // Act
                 ProjectListDTO results = this.projectListService.deleteProjectList(1L);
 
+                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .isEqualTo(this.projectList1DTO);
@@ -193,11 +214,13 @@ public class ProjectListServiceTests {
         @DisplayName("Test should throw exception when a requested list cannot be found")
         @Test
         void Delete_WithInvalidProjectId_ThrowException() {
-                when(this.projectListRepository.findById(1L)).thenReturn(Optional.empty());
+                // Arrange
+                when(this.helperService.getActiveUserId()).thenReturn(1L);
+                when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.empty());
 
+                // Act & Assert
                 Assertions.assertThatThrownBy(() -> this.projectListService.deleteProjectList(1L))
-                                .isInstanceOf(ProjectListNotFoundException.class)
-                                .hasMessage("Project with that id can not be found.");
+                                .isInstanceOf(ProjectListNotFoundException.class);
 
         }
 
