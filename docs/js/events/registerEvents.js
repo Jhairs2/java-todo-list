@@ -50,7 +50,8 @@ const completeRegister = () => {
     const p = buildUIElement({ element: "p", attributes: { class: "register-message" } });
     p.textContent = "Successfully Registered! Return to ";
 
-    const a = buildUIElement({ element: "a", properties: { href: "./login.html" } });
+    const a = buildUIElement({ element: "a" });
+    a.href = "./login.html";
     a.textContent = "Login";
 
     main.append(p, a);

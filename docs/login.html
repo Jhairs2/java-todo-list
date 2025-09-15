@@ -23,15 +23,15 @@
             <p class="status-message"></p>
             <hr>
         </section>
-        <form novalidate class="login-form">
+        <form class="login-form" novalidate>
             <div class="input-wrapper">
                 <label hidden for="username">username</label>
-                <input type="text" id="username" name="username" placeholder="username" minlength="4" autocomplete="off"
-                    required>
+                <input type="text" id="username" name="username" placeholder="username" minlength="4"
+                    autocomplete="username" required>
 
                 <label hidden for="password">password</label>
                 <input type="password" id="password" name="password" placeholder="password" minlength="12"
-                    autocomplete="off" required>
+                    autocomplete="current-password" required>
 
                 <input type="checkbox" id="toggle-password">
                 <label for="toggle-password">Show Password</label>
