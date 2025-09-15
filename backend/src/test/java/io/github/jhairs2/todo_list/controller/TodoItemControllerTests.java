@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -32,6 +33,7 @@ import io.github.jhairs2.todo_list.todo.model.TodoItem;
 import io.github.jhairs2.todo_list.todo.service.TodoService;
 
 @WebMvcTest(TodoItemController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class TodoItemControllerTests {
 
         @Autowired
@@ -106,7 +108,7 @@ public class TodoItemControllerTests {
         void Create_WithValidArgs_ReturnCreatedTodo() throws Exception {
                 // Arrange
                 TodoItem todo = new TodoItem("New Task");
-                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenReturn(new TodoItemDTO(1L, todo.getTask(), todo.isCompleted(), "Example"));
 
                 String requestBody = this.objectMapper.writeValueAsString(todo);
@@ -125,7 +127,7 @@ public class TodoItemControllerTests {
         void Create_WithInvalidProjectId_ThrowException() throws Exception {
                 // Arrange
                 TodoItem todo = new TodoItem("New Task");
-                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
 
                 String requestBody = this.objectMapper.writeValueAsString(todo);
@@ -144,7 +146,7 @@ public class TodoItemControllerTests {
         void Create_WithNoTitle_ThrowException() throws Exception {
                 // Arrange
                 TodoItem todo = new TodoItem("");
-                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
 
                 String requestBody = this.objectMapper.writeValueAsString(todo);
@@ -162,7 +164,7 @@ public class TodoItemControllerTests {
         @Test
         void Create_WithNullTodoItem_ReturnException() throws Exception {
                 // Arrange
-                when(this.todoService.addTodoToList(eq(1L), any(TodoItem.class)))
+                when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
 
                 String requestBody = "{}";
@@ -181,7 +183,7 @@ public class TodoItemControllerTests {
         void Update_WithValidArgs_ReturnUpdatedTodo() throws Exception {
                 // Arrange
                 TodoItem updatedTodo = new TodoItem(this.todoItemDTO.task());
-                when(this.todoService.updateTodoById(eq(1L), any(TodoItem.class)))
+                when(this.todoService.updateTodoById(eq(1L), eq(1L), any(TodoItemDTO.class)))
                                 .thenReturn(new TodoItemDTO(1L, updatedTodo.getTask(), false, "Example"));
 
                 String requestBody = this.objectMapper.writeValueAsString(updatedTodo);
@@ -200,7 +202,7 @@ public class TodoItemControllerTests {
         void Update_WithInvalidTodoId_ThrowException() throws Exception {
                 // Arrange
                 TodoItem updatedTodo = new TodoItem(this.todoItemDTO.task());
-                when(this.todoService.updateTodoById(eq(1L), any(TodoItem.class)))
+                when(this.todoService.updateTodoById(eq(1L), eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new TodoItemNotFoundException("Task with that id does not exist."));
 
                 String requestBody = this.objectMapper.writeValueAsString(updatedTodo);
@@ -218,7 +220,7 @@ public class TodoItemControllerTests {
         @Test
         void Delete_WithValidTodoId_ReturnDeletedTodo() throws Exception {
                 // Arrange
-                when(this.todoService.deleteTodoFromList(1L)).thenReturn(this.todoItemDTO);
+                when(this.todoService.deleteTodoFromList(1L, 1L)).thenReturn(this.todoItemDTO);
 
                 // Act / Assert
                 this.mockMvc.perform(delete("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L))
@@ -234,7 +236,7 @@ public class TodoItemControllerTests {
         void Delete_WithInvalidTodoId_ThrowException() throws Exception {
 
                 // Arrange
-                when(this.todoService.deleteTodoFromList(1L))
+                when(this.todoService.deleteTodoFromList(1L, 1L))
                                 .thenThrow(new TodoItemNotFoundException("Task with that id does not exist."));
 
                 // Act / Assert
