@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
+    <link rel="manifest" href="./images/site.webmanifest">
+    <link rel="stylesheet" href="./css/loginStyles.css" />
+    <script type="module" src="./js/events/registerEvents.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="header-section">
+            <h2 class="header">Register</h2>
+            <div>
+                <p class="header-message">Please register here</p>
+                <p>Password Requirements:</p>
+                <ul>
+                    <li>Contain at least 12 Characters</li>
+                    <li>Contain at least 1 uppercase and lowercase letter</li>
+                    <li>Contain at least 1 number</li>
+                </ul>
+                <p class="error-message"></p>
+            </div>
+            <hr>
+        </section>
+        <form class="register-form">
+            <div class="input-wrapper">
+                <label hidden for="username">username</label>
+                <input type="text" id="username" name="username" placeholder="new username" minlength="4" required>
+
+                <label hidden for="password">password</label>
+                <input type="password" id="password" name="password" placeholder="new password" minlength="12"
+                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]+$"
+                    title="Password must be at least 12 characters and include uppercase, lowercase, and a number"
+                    required>
+
+                <input type="checkbox" id="toggle-password">
+                <label for="toggle-password">Show Password</label>
+
+            </div>
+            <button class="submit-btn" type="submit"> Login </button>
+        </form>
+        <p class="register-link">
+            Already have an account login <a href="/login.html">
+                here!
+            </a>
+        </p>
+    </main>
+</body>
+
+</html>
