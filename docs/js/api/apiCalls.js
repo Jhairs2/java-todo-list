@@ -34,7 +34,7 @@ export const apiCalls = () => {
   const handleFetchResponse = async (response) => {
     if (response.status === 401 || response.status === 403) {
       if (window.location.pathname != "login.html") {
-        window.location.replace("login.html");
+        window.location.replace("./login.html");
       }
       errorHandler("Invalid credentials");
     }

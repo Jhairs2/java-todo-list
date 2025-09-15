@@ -12,7 +12,7 @@ const password = query("#password");
 registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-        const addedUser = await forms.re(registerForm);
+        const addedUser = await forms.registerUser(registerForm);
         completeRegister();
         return addedUser;
     }
