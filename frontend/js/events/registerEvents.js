@@ -24,7 +24,7 @@ registerForm.addEventListener("submit", async (e) => {
 
 
 })
-\
+
 // Enable password visibility
 showPasswordCheckbox.addEventListener("change", () => {
     if (password.type === "password") {
@@ -40,7 +40,7 @@ const completeRegister = () => {
     main.replaceChildren();
 
     const p = buildUIElement({ element: "p", attributes: { class: "register-message" } });
-    const a = buildUIElement({ element: "a", properties: { href: "login.html" } });
+    const a = buildUIElement({ element: "a", properties: { href: "./login.html" } });
     a.textContent = "Login";
     p.textContent = `Successfully Registered! Return to ${a}`;
     main.append(p);
