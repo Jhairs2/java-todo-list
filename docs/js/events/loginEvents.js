@@ -9,19 +9,21 @@ const password = query("#password");
 
 
 // Handle Login submits
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    try {
-        const addedUser = await forms.loginUser(loginForm);
-        return addedUser;
-    }
-    catch (error) {
-        const p = query(".error-message");
-        p.textContent = error;
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+            const addedUser = await forms.loginUser(loginForm);
+            return addedUser;
+        }
+        catch (error) {
+            const p = query(".error-message");
+            p.textContent = error;
+        }
 
-
+    })
 })
+
 
 // Enable password visibility
 showPasswordCheckbox.addEventListener("change", () => {
