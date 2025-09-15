@@ -2,7 +2,7 @@ import formEvents from "./formEvents.js";
 import { query } from "../utility/utilityFunctions.js";
 
 // Initialize imports
-
+const error = localStorage.getItem("error");
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
 
@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitBtn = query(".submit-btn", loginForm)
     const statusMessage = query(".status-message");
 
+    if (error) {
+        statusMessage.textContent = error;
+    }
+
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
@@ -26,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         catch (error) {
             submitBtn.disabled = false;
             statusMessage.textContent = error;
+            localStorage.setItem("error", error);
         }
 
     })
