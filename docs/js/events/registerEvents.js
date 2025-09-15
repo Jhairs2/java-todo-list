@@ -2,7 +2,7 @@ import { buildUIElement, query } from "../utility/utilityFunctions.js";
 import formEvents from "./formEvents.js";
 
 // Initialize imports
-
+const error = localStorage.getItem("error");
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
 
@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const registerForm = query(".register-form");
     const submitBtn = query(".submit-btn", registerForm)
     const statusMessage = query(".status-message");
+
+    if (error) {
+        statusMessage.textContent = error;
+    }
 
     registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -25,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         catch (error) {
             submitBtn.disabled = false;
             statusMessage.textContent = error;
+            localStorage.setItem("error", error);
             console.log(error);
         }
 
@@ -54,7 +59,8 @@ const completeRegister = () => {
     a.href = "./login.html";
     a.textContent = "Login";
 
-    main.append(p, a);
+    p.append(a);
+    main.append(p);
 }
 
 
