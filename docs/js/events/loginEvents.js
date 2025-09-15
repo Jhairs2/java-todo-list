@@ -2,16 +2,19 @@ import formEvents from "./formEvents.js";
 import { query } from "../utility/utilityFunctions.js";
 
 // Initialize imports
-const forms = formEvents();
-const loginForm = query(".login-form");
+
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
-const submitBtn = query(".submit-btn", loginForm)
-const statusMessage = query(".status-message");
+
 
 
 // Handle Login submits
 document.addEventListener("DOMContentLoaded", () => {
+    const forms = formEvents();
+    const loginForm = query(".login-form");
+    const submitBtn = query(".submit-btn", loginForm)
+    const statusMessage = query(".status-message");
+
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {

@@ -190,15 +190,16 @@ img {
     flex: 0 0 auto;
     appearance: none;
     cursor: pointer;
-    position: relative;
-    line-height: 1.2;
+    position: relative; 
+    height: 30px;
+    width: 30px;
 }
 
 .task-checkbox::before {
     content: "";
     display: block;
-    height: 30px;
-    width: 30px;
+   height: 100%;
+   width: 100%;
     border: 2px solid black;
     border-radius: 50%;
     background-color: white;
