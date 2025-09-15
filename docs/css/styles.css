@@ -187,8 +187,6 @@ img {
 }
 
 .task-checkbox {
-    display: flex;
-    align-items: center;
     flex: 0 0 auto;
     appearance: none;
     cursor: pointer;
