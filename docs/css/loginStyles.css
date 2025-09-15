@@ -80,7 +80,7 @@ background-color: #04AA6D;
     text-align: center;
 }
 
-.error-message {
+.status-message {
     color: red;
     font-weight: bold;
 }

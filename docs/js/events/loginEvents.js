@@ -6,6 +6,8 @@ const forms = formEvents();
 const loginForm = query(".login-form");
 const showPasswordCheckbox = query("#toggle-password");
 const password = query("#password");
+const submitBtn = query(".submit-btn", loginForm)
+const statusMessage = query(".status-message");
 
 
 // Handle Login submits
@@ -13,12 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
+            statusMessage.textContent = "Logging in! Please wait..."
+            submitBtn.disabled = true;
             const addedUser = await forms.loginUser(loginForm);
             return addedUser;
         }
         catch (error) {
-            const p = query(".error-message");
-            p.textContent = error;
+            submitBtn.disabled = false;
+            statusMessage.textContent = error;
         }
 
     })
