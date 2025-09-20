@@ -26,7 +26,6 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 
 - Clone repo
 - Open the backend folder in a separate workspace
-- Run this command in your terminal
 - Find the `application.properties` file in the resources folder
 - Fill in the `application.properties` file with your credentials
 
