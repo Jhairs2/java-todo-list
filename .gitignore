@@ -5,9 +5,6 @@
 /backend/mvnw.cmd
 !backend/.mvn/wrapper/maven-wrapper.jar
 
-# === FRONTEND ===
-/docs/js/api/url.js
-
 ### STS ###
 .apt_generated
 .classpath
