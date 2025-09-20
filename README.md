@@ -22,7 +22,7 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 
 ## How To Install
 
-**`applications.properties` and `url.js` files are gitignored! Will have to fill in own credentials!**
+\*\* **`applications.properties` and `url.js` files are gitignored! Will have to fill in own credentials!** \*\*
 
 ### Backend
 
