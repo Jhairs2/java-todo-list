@@ -34,8 +34,8 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 cp application-example.properties application.properties
 ```
 
-- Find the `applications.properties` file in the resources folder
-- Fill in the `applications.properties` file with your credentials
+- Find the `application.properties` file in the resources folder
+- Fill in the `application.properties` file with your credentials
 
   ![application.properties screenshot](./images/image.png)
 
@@ -43,18 +43,14 @@ cp application-example.properties application.properties
 
 ### Frontend
 
-- Open the docs folder in a separate workspace
-- Run this command in your terminal
-
-```bash
-cp urlExample.js url.js
-```
-
-- Open the `login.html` file in your browser
+- Open the frontend folder in a separate workspace
+- Open the js folder and find the `url.js` file in the api folder
+- Update the url to your liking or leave as is
+- Open the `index.html` file in your browser
 
 ## Live Demo
 
 **Backend is served with Render (Free Option) so it might run slow!**
 
 You can try the app live on GitHub Pages:
-[Todo List App](https://jhairs2.github.io/java-todo-list/)
+[Todo List App](https://jhairs2.github.io/java-todo-list-frontend/)
