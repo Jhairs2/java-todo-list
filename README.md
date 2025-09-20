@@ -22,18 +22,11 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 
 ## How To Install
 
-\*\* **`applications.properties` file is gitignored! Will have to fill in own credentials!** \*\*
-
 ### Backend
 
 - Clone repo
 - Open the backend folder in a separate workspace
 - Run this command in your terminal
-
-```bash
-cp application-example.properties application.properties
-```
-
 - Find the `application.properties` file in the resources folder
 - Fill in the `application.properties` file with your credentials
 
