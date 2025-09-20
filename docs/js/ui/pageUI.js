@@ -52,7 +52,7 @@ const UI = () => {
       console.log(error);
 
       if (error == "TypeError: Failed to fetch") {
-        window.location.replace("./login.html");
+        window.location.replace("./index.html");
         return;
       }
       ui.displayError("Error: unable to load projects from database ):");
@@ -64,7 +64,7 @@ const UI = () => {
     } catch (error) {
       console.log(error);
       if (error == "TypeError: Failed to fetch") {
-        window.location.replace("./login.html");
+        window.location.replace("./index.html");
         return;
       }
       ui.displayError(

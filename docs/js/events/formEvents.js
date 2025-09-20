@@ -85,7 +85,7 @@ const formEvents = () => {
       }
     );
 
-    window.location.replace("./index.html");
+    window.location.replace("./todoListUI.html");
     return addedUser;
   }
 

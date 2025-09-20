@@ -2,65 +2,50 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Todo-List</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet" />
-  <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
-  <link rel="manifest" href="./images/site.webmanifest">
-  <link rel="stylesheet" href="./css/styles.css" />
-  <script type="module" src="./js/main.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
+    <link rel="manifest" href="./images/site.webmanifest">
+    <link rel="stylesheet" href="./css/loginStyles.css" />
+    <script type="module" src="./js/events/loginEvents.js"></script>
 </head>
 
 <body>
-  <header id="header-section">
-    <div class="header-title">
-      <h1> Todo App </h1>
-    </div>
-    <button class="logout-button">Log out</button>
-  </header>
+    <main>
+        <section class="header-section">
+            <h2 class="header">Login</h2>
+            <p class="header-message">Please sign in here</p>
+            <p class="status-message"></p>
+            <hr>
+        </section>
+        <form class="login-form" novalidate>
+            <div class="input-wrapper">
+                <label hidden for="username">username</label>
+                <input type="text" id="username" name="username" placeholder="username" minlength="4"
+                    autocomplete="username" required>
 
-  <main id="main-section">
-    <section class="project-select-container">
-      <div class="project-details-container">
-        <label hidden for="project-select">Project Menu:</label>
-        <select id="project-select" class="project-select">
-          <option disabled selected hidden>Select a project</option>
-        </select>
-        <form class="edit-project-form" data-action="edit-project">
-          <input type="text" class="edit-project-input" name="update-project-input" maxlength="70" required>
+                <label hidden for="password">password</label>
+                <input type="password" id="password" name="password" placeholder="password" minlength="12"
+                    autocomplete="current-password" required>
+
+                <input type="checkbox" id="toggle-password">
+                <label for="toggle-password">Show Password</label>
+
+            </div>
+
+            <button class="submit-btn" type="submit"> Login </button>
         </form>
-        <form class="add-project-form" data-action="new-project">
-          <input type="text" class="add-project-input" name="add-project-input" placeholder="Add a new project here..."
-            maxlength="70" required>
-        </form>
-      </div>
-      <div class="project-details-btns-container">
-        <button class="edit-project-btn" data-action="edit-project" type="button">
-          Edit Project </button>
-        <button data-action="add-project" class="add-project-btn" type="button">
-          Add Project</button>
-        <button class="delete-project-btn" data-action="delete-project" type="button">
-          Delete Project
-        </button>
-      </div>
-    </section>
-
-    <form class="add-task-form" data-action="new-task">
-      <input type="text" id="add-task-input" name="add-task-input" placeholder="Add a new task here..." maxlength="70"
-        required>
-    </form>
-
-    <section class="todo-content-container">
-
-    </section>
-  </main>
-  <footer class="footer-container">
-    <span class="footer-message">©2025 Justin Hairston</span>
-  </footer>
+        <p class="register-link">
+            Don't have an account register <a href="register.html">
+                here!
+            </a>
+        </p>
+    </main>
 </body>
 
 </html>

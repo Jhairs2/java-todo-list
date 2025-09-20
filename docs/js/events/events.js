@@ -8,7 +8,7 @@ const eventListeners = () => {
   const api = apiCalls();
   const ui = uiFunctions();
   const forms = formEvents();
-  const LOGIN_URL = "./login.html";
+  const LOGIN_URL = "./index.html";
 
   // SELECT MENU
 

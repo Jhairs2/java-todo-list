@@ -50,7 +50,7 @@ const completeRegister = () => {
     p.textContent = "Successfully Registered! Return to ";
 
     const a = buildUIElement({ element: "a" });
-    a.href = "./login.html";
+    a.href = "./index.html";
     a.textContent = "Login";
 
     p.append(a);
