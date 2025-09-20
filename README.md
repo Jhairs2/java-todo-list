@@ -1,6 +1,6 @@
-# TODO List PROJECT
+# Todo List Project
 
-## Simple full-stack todo-list application for managing projects and tasks
+## Simple Full-Stack Application For Managing Projects And Tasks
 
 This project utilizes a **Spring Boot REST API** that is secured with **Spring Security** and a basic frontend with **vanilla JS, HTML, and CSS**!
 
@@ -14,7 +14,7 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 ## Key Features
 
 - User Authentication (**JWT-Based Authentication**)
-- Secured REST API endpoints wiht Spring Security
+- Secured REST API endpoints with Spring Security
 - Ability to perform CRUD operations on projects and tasks
 - Manage tasks inside each project
 - Relational Database where users, projects, and tasks are persisted
@@ -22,4 +22,39 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 
 ## How To Install
 
-In progress
+** `applications.properties` and `url.js` files are gitignored! Will have to fill in own credentials! **
+
+### Backend
+
+- Clone repo
+- Open the backend folder in a separate workspace
+- Run this command in your terminal
+
+```bash
+cp application-example.properties application.properties
+```
+
+- Find the `applications.properties` file in the resources folder
+- Fill in the `applications.properties` file with your credentials
+
+  ![application.properties screenshot](./images/image.png)
+
+- Find the `TodoListApplication.java` file and run the project
+
+### Frontend
+
+- Open the docs folder in a separate workspace
+- Run this command in your terminal
+
+```bash
+cp urlExample.js url.js
+```
+
+- Open the `login.html` file in your browser
+
+## Live Demo
+
+** Backend is served with Render (Free Option) so it might run slow!**
+
+You can try the app live on GitHub Pages:
+[Todo List App](https://jhairs2.github.io/java-todo-list/)
