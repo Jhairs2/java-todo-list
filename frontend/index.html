@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
+    <link rel="manifest" href="./images/site.webmanifest">
+    <link rel="stylesheet" href="./css/loginStyles.css" />
+    <script type="module" src="./js/events/loginEvents.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="header-section">
+            <h2 class="header">Login</h2>
+            <p class="header-message">Please sign in here</p>
+            <p class="status-message"></p>
+            <hr>
+        </section>
+        <form class="login-form" novalidate>
+            <div class="input-wrapper">
+                <label hidden for="username">username</label>
+                <input type="text" id="username" name="username" placeholder="username" minlength="4"
+                    autocomplete="username" required>
+
+                <label hidden for="password">password</label>
+                <input type="password" id="password" name="password" placeholder="password" minlength="12"
+                    autocomplete="current-password" required>
+
+                <input type="checkbox" id="toggle-password">
+                <label for="toggle-password">Show Password</label>
+
+            </div>
+
+            <button class="submit-btn" type="submit"> Login </button>
+        </form>
+        <p class="register-link">
+            Don't have an account register <a href="register.html">
+                here!
+            </a>
+        </p>
+    </main>
+</body>
+
+</html>
