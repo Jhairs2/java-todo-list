@@ -4,6 +4,7 @@
 /backend/mvnw
 /backend/mvnw.cmd
 !backend/.mvn/wrapper/maven-wrapper.jar
+/backend/src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
@@ -34,5 +35,5 @@ build/
 /backend/.vscode/
 
 ### Build Files ###
-src/main/resources/application.properties
+
 
