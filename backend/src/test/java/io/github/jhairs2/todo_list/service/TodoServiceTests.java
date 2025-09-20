@@ -64,16 +64,14 @@ public class TodoServiceTests {
         @DisplayName("Test should return all tasks of the project")
         @Test
         void Get_IfProjectAndTasksExist_ReturnAllTasks() {
-                // Arrange
+
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.of(this.projectList));
                 when(this.todoItemDTOMapper.convertToDTOList(this.projectList.getTasks()))
                                 .thenReturn(List.of(this.todoItemDTO));
 
-                // Act
                 List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
 
-                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .hasSize(1)
@@ -85,16 +83,13 @@ public class TodoServiceTests {
         @Test
         void Get_IfNoTasksExist_ReturnEmptyList() {
 
-                // Arrange
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.of(this.projectList));
                 when(this.todoItemDTOMapper.convertToDTOList(this.projectList.getTasks()))
                                 .thenReturn(List.of());
 
-                // Act
                 List<TodoItemDTO> results = this.todoService.getAllTodosFromList(1L);
 
-                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .hasSize(0);
@@ -105,11 +100,9 @@ public class TodoServiceTests {
         @Test
         void Get_WithInvalidProjectId_ThrowException() {
 
-                // Arrange
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.empty());
 
-                // Act / Assert
                 Assertions.assertThatThrownBy(() -> this.todoService.getAllTodosFromList(1L))
                                 .isInstanceOf(ProjectListNotFoundException.class);
 
@@ -119,16 +112,13 @@ public class TodoServiceTests {
         @Test
         void Create_WithValidArgs_ReturnCreatedTodo() {
 
-                // Arrange
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.of(this.projectList));
                 when(this.todoRepository.save(any(TodoItem.class))).thenReturn(this.todoItem);
                 when(this.todoItemDTOMapper.convertToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
 
-                // Act
                 TodoItemDTO results = this.todoService.addTodoToList(1L, this.todoItemDTO);
 
-                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .isEqualTo(this.todoItemDTO);
@@ -139,10 +129,9 @@ public class TodoServiceTests {
         @DisplayName("Test should return an exception if todo has empty title")
         @Test
         void Create_WithNoTitle_ThrowException() {
-                // Arrange
+
                 TodoItemDTO newTask = new TodoItemDTO(null, "", true, null);
 
-                // Act /Assert
                 Assertions.assertThatThrownBy(() -> this.todoService.addTodoToList(1L, newTask))
                                 .isInstanceOf(IllegalArgumentException.class);
 
@@ -151,10 +140,9 @@ public class TodoServiceTests {
         @DisplayName("Test should return an exception if todo is Null")
         @Test
         void Create_WithNullTodoItem_ReturnException() {
-                // Arrange
+
                 TodoItemDTO newTask = null;
 
-                // Act /Assert
                 Assertions.assertThatThrownBy(() -> this.todoService.addTodoToList(1L, newTask))
                                 .isInstanceOf(IllegalArgumentException.class);
 
@@ -163,11 +151,10 @@ public class TodoServiceTests {
         @DisplayName("Test should return an exception if project cannot be found")
         @Test
         void Create_WithInvalidProjectId_ThrowException() {
-                // Arrange
+
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.empty());
 
-                // Act /Assert
                 Assertions.assertThatThrownBy(() -> this.todoService.addTodoToList(1L, this.todoItemDTO))
                                 .isInstanceOf(ProjectListNotFoundException.class);
 
@@ -176,7 +163,7 @@ public class TodoServiceTests {
         @DisplayName("Test should return updated todo")
         @Test
         void Update_WithValidArgs_ReturnUpdatedTodo() {
-                // Arrange
+
                 TodoItemDTO newTask = new TodoItemDTO(null, "newTask", false, null);
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.existsByUserIdAndId(1L, 1L)).thenReturn(true);
@@ -187,10 +174,8 @@ public class TodoServiceTests {
                                 .thenReturn(new TodoItemDTO(1L, newTask.task(), newTask.completed(),
                                                 this.todoItem.getList().getListTitle()));
 
-                // Act
                 TodoItemDTO results = this.todoService.updateTodoById(1L, 1L, newTask);
 
-                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .extracting("task", "completed")
@@ -201,7 +186,7 @@ public class TodoServiceTests {
         @DisplayName("Test should return exception if Todo to update is not found")
         @Test
         void Update_WithInvalidTodoId_ThrowException() {
-                // Arrange
+
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.existsByUserIdAndId(1L, 1L)).thenReturn(true);
                 when(this.todoRepository.findByListIdAndId(1L, 1L)).thenReturn(Optional.empty());
@@ -214,16 +199,14 @@ public class TodoServiceTests {
         @DisplayName("Test should return deleted Todo")
         @Test
         void Delete_WithValidTodoId_ReturnDeletedTodo() {
-                // Arrange
+
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.existsByUserIdAndId(1L, 1L)).thenReturn(true);
                 when(this.todoRepository.findByListIdAndId(1L, 1L)).thenReturn(Optional.of(this.todoItem));
                 when(this.todoItemDTOMapper.convertToDTO(this.todoItem)).thenReturn(this.todoItemDTO);
 
-                // Act
                 TodoItemDTO results = this.todoService.deleteTodoFromList(1L, 1L);
 
-                // Assert
                 Assertions.assertThat(results)
                                 .isNotNull()
                                 .isEqualTo(this.todoItemDTO);
@@ -234,7 +217,7 @@ public class TodoServiceTests {
         @DisplayName("Test should return exception if Todo to delete is not found")
         @Test
         void Delete_WithInvalidTodoId_ThrowException() {
-                // Arrange
+
                 when(this.helperService.getActiveUserId()).thenReturn(1L);
                 when(this.projectListRepository.existsByUserIdAndId(1L, 1L)).thenReturn(true);
                 when(this.todoRepository.findByListIdAndId(1L, 1L)).thenReturn(Optional.empty());

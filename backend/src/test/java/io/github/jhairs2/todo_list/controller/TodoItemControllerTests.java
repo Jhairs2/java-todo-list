@@ -61,10 +61,9 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return all tasks from project")
         @Test
         void Get_IfProjectAndTasksExist_ReturnAllTasks() throws Exception {
-                // Arrange
+
                 when(this.todoService.getAllTodosFromList(1L)).thenReturn(this.todoItemList);
 
-                // Act / Assert
                 this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
                                 .andDo(print())
                                 .andExpect(status().isOk())
@@ -77,10 +76,9 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return empty list when project has no task")
         @Test
         void Get_IfNoTasksExist_ReturnEmptyList() throws Exception {
-                // Arrange
+
                 when(this.todoService.getAllTodosFromList(1L)).thenReturn(List.of());
 
-                // Act / Assert
                 this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
                                 .andDo(print())
                                 .andExpect(status().isOk())
@@ -91,11 +89,10 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return exception if project cannot be found")
         @Test
         void Get_WithInvalidProjectId_ThrowException() throws Exception {
-                // Arrange
+
                 when(this.todoService.getAllTodosFromList(1L))
                                 .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
 
-                // Act / Assert
                 this.mockMvc.perform(get("/api/v1/projects/{projectId}/todos", 1L))
                                 .andDo(print())
                                 .andExpect(status().isNotFound())
@@ -106,14 +103,13 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return todo that was added")
         @Test
         void Create_WithValidArgs_ReturnCreatedTodo() throws Exception {
-                // Arrange
+
                 TodoItem todo = new TodoItem("New Task");
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenReturn(new TodoItemDTO(1L, todo.getTask(), todo.isCompleted(), "Example"));
 
                 String requestBody = this.objectMapper.writeValueAsString(todo);
 
-                // Act / Assert
                 this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -125,14 +121,13 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return exception if project to add todo is not found")
         @Test
         void Create_WithInvalidProjectId_ThrowException() throws Exception {
-                // Arrange
+
                 TodoItem todo = new TodoItem("New Task");
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new ProjectListNotFoundException("Project with that id can not be found."));
 
                 String requestBody = this.objectMapper.writeValueAsString(todo);
 
-                // Act / Assert
                 this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -144,14 +139,13 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return exception if invalid TodoItem argument")
         @Test
         void Create_WithNoTitle_ThrowException() throws Exception {
-                // Arrange
+
                 TodoItem todo = new TodoItem("");
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
 
                 String requestBody = this.objectMapper.writeValueAsString(todo);
 
-                // Act / Assert
                 this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -163,13 +157,12 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return exception if TodoItem is null")
         @Test
         void Create_WithNullTodoItem_ReturnException() throws Exception {
-                // Arrange
+
                 when(this.todoService.addTodoToList(eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new IllegalArgumentException("Task cannot be blank or null"));
 
                 String requestBody = "{}";
 
-                // Act / Assert
                 this.mockMvc.perform(post("/api/v1/projects/{projectId}/todos", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -181,14 +174,13 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return updated TodoItem")
         @Test
         void Update_WithValidArgs_ReturnUpdatedTodo() throws Exception {
-                // Arrange
+
                 TodoItem updatedTodo = new TodoItem(this.todoItemDTO.task());
                 when(this.todoService.updateTodoById(eq(1L), eq(1L), any(TodoItemDTO.class)))
                                 .thenReturn(new TodoItemDTO(1L, updatedTodo.getTask(), false, "Example"));
 
                 String requestBody = this.objectMapper.writeValueAsString(updatedTodo);
 
-                // Act / Assert
                 this.mockMvc.perform(put("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -200,14 +192,13 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return exception when todo to update cannot be found")
         @Test
         void Update_WithInvalidTodoId_ThrowException() throws Exception {
-                // Arrange
+
                 TodoItem updatedTodo = new TodoItem(this.todoItemDTO.task());
                 when(this.todoService.updateTodoById(eq(1L), eq(1L), any(TodoItemDTO.class)))
                                 .thenThrow(new TodoItemNotFoundException("Task with that id does not exist."));
 
                 String requestBody = this.objectMapper.writeValueAsString(updatedTodo);
 
-                // Act / Assert
                 this.mockMvc.perform(put("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -219,10 +210,9 @@ public class TodoItemControllerTests {
         @DisplayName("Test should return deleted TodoItem")
         @Test
         void Delete_WithValidTodoId_ReturnDeletedTodo() throws Exception {
-                // Arrange
+
                 when(this.todoService.deleteTodoFromList(1L, 1L)).thenReturn(this.todoItemDTO);
 
-                // Act / Assert
                 this.mockMvc.perform(delete("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L))
                                 .andDo(print())
                                 .andExpect(status().isOk())
@@ -235,11 +225,9 @@ public class TodoItemControllerTests {
         @Test
         void Delete_WithInvalidTodoId_ThrowException() throws Exception {
 
-                // Arrange
                 when(this.todoService.deleteTodoFromList(1L, 1L))
                                 .thenThrow(new TodoItemNotFoundException("Task with that id does not exist."));
 
-                // Act / Assert
                 this.mockMvc.perform(delete("/api/v1/projects/{projectId}/todos/{taskId}", 1L, 1L))
                                 .andDo(print())
                                 .andExpect(status().isNotFound())
