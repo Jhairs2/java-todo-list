@@ -22,7 +22,7 @@ This project utilizes a **Spring Boot REST API** that is secured with **Spring S
 
 ## How To Install
 
-** `applications.properties` and `url.js` files are gitignored! Will have to fill in own credentials! **
+**`applications.properties` and `url.js` files are gitignored! Will have to fill in own credentials!**
 
 ### Backend
 
@@ -54,7 +54,7 @@ cp urlExample.js url.js
 
 ## Live Demo
 
-** Backend is served with Render (Free Option) so it might run slow!**
+**Backend is served with Render (Free Option) so it might run slow!**
 
 You can try the app live on GitHub Pages:
 [Todo List App](https://jhairs2.github.io/java-todo-list/)
